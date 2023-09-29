@@ -40,6 +40,11 @@ CREATE TABLE IF NOT EXISTS `Role_Skill`(
     CONSTRAINT role_skill_fk2 FOREIGN KEY (Skill_Name) REFERENCES skills(Skill_Name) 
 );
 
+CREATE TABLE IF NOT EXISTS `skills`(
+    `Skill_Name` varchar(50) NOT NULL,
+    CONSTRAINT skills_pk PRIMARY KEY (Skill_Name)
+)
+
 CREATE TABLE IF NOT EXISTS `Staff_Skill` (
     `Staff_ID` int NOT NULL,
     `Skill_Name` varchar(50) NOT NULL,
