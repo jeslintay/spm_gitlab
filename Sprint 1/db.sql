@@ -6,8 +6,6 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS `sbrp` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `sbrp`;
 
-
-DROP TABLE IF EXISTS `access_rights`;
 CREATE TABLE IF NOT EXISTS `access_rights`(
     `Access_right_no` int NOT NULL,
     `role` varchar(20) NOT NULL,
@@ -32,6 +30,11 @@ CREATE TABLE IF NOT EXISTS `role` (
     CONSTRAINT role_pkey PRIMARY KEY (role_name)
 );
 
+CREATE TABLE IF NOT EXISTS `skills`(
+    `Skill_Name` varchar(50) NOT NULL,
+    CONSTRAINT skills_pk PRIMARY KEY (Skill_Name)
+);
+
 CREATE TABLE IF NOT EXISTS `Role_Skill`(
     `Role_Name` varchar(20),
     `Skill_Name` varchar(50),
@@ -40,10 +43,6 @@ CREATE TABLE IF NOT EXISTS `Role_Skill`(
     CONSTRAINT role_skill_fk2 FOREIGN KEY (Skill_Name) REFERENCES skills(Skill_Name) 
 );
 
-CREATE TABLE IF NOT EXISTS `skills`(
-    `Skill_Name` varchar(50) NOT NULL,
-    CONSTRAINT skills_pk PRIMARY KEY (Skill_Name)
-)
 
 CREATE TABLE IF NOT EXISTS `Staff_Skill` (
     `Staff_ID` int NOT NULL,
