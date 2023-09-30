@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `role` (
 
 CREATE TABLE IF NOT EXISTS `skills`(
     `Skill_Name` varchar(50) NOT NULL,
+    `Skill_Descr` varchar(200) NOT NULL,
     CONSTRAINT skills_pk PRIMARY KEY (Skill_Name)
 );
 
@@ -47,8 +48,14 @@ CREATE TABLE IF NOT EXISTS `Role_Skill`(
 CREATE TABLE IF NOT EXISTS `Staff_Skill` (
     `Staff_ID` int NOT NULL,
     `Skill_Name` varchar(50) NOT NULL,
-    CONSTRAINT Staff_skill_pk PRIMARY KEY (Staff_ID, Skill_Name),
     CONSTRAINT Staff_skill_fk1 FOREIGN KEY (Skill_Name) REFERENCES skills(Skill_Name),
     CONSTRAINT Staff_skill_fk2 FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID) 
 );
 
+CREATE TABLE IF NOT EXISTS `Role_Listing` (
+    `role_name` VARCHAR(20) NOT NULL,
+    `role_descr` VARCHAR(200) NOT NULL,
+    `skills_required` VARCHAR(200) NOT NULL,
+    `role_deadline` DATE NOT NULL,
+    CONSTRAINT role_listing_pk PRIMARY KEY (role_name)
+)
