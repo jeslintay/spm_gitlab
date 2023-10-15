@@ -55,25 +55,25 @@ def view_role_listings():
         return jsonify({"error": str(e)}),500
     
 # holds values of selected roles    
-@app.route("/role", methods=['POST'])
-def role():
-    data = request.get_json()
-    print(data)
-    print(data["record"])
-    testDict = data["record"]
-    if not all (key in testDict for 
-                key in('role_name','role_descr',
-                'skills_required','role_deadline')):
-        return jsonify({
-            "message": "Incorrect JSON object provided."
-        }), 500
-    role = Listing(**testDict)
-    try:
-        return jsonify(role.to_dict()), 201
-    except Exception:
-        return jsonify({
-            "message": "Unable to commit to database."
-        }), 500
+# @app.route("/role", methods=['POST'])
+# def role():
+#     data = request.get_json()
+#     print(data)
+#     print(data["record"])
+#     testDict = data["record"]
+#     if not all (key in testDict for 
+#                 key in('role_name','role_descr',
+#                 'skills_required','role_deadline')):
+#         return jsonify({
+#             "message": "Incorrect JSON object provided."
+#         }), 500
+#     role = Listing(**testDict)
+#     try:
+#         return jsonify(role.to_dict()), 201
+#     except Exception:
+#         return jsonify({
+#             "message": "Unable to commit to database."
+#         }), 500
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=5000, debug=True)
 
