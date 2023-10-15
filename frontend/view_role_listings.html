@@ -85,22 +85,20 @@
                 <tr>
                     <th>Role Title</th>
                     <th>Deadline</th>
-                    <th></th>
+                    <th class="d-flex justify-content-center"><a href="create_role.html"><button class="btn btn-outline-primary" type="submit">Create</button></a></th>
                 </tr>
             </thead>
             <tbody id="body">
                 <tr v-for="record in roles">
                     <td id="testing"><a v-on:click="sendRole(record)" href="example_role_content.html">{{record.role_name}}</a></td>
                     <td>{{record.role_deadline}}</td>
-                    <td><a href="#"><button class="btn btn-outline-primary" type="submit">Edit</button></a></td>
+                    <td class="d-flex justify-content-center"><a href="edit_role_listing.html"><button class="btn btn-outline-primary" type="submit">Edit</button></a></td>
                 </tr>
             </tbody>
         </table>
 
 
-        <p>
-            <a href="create_role.html"><button class="btn btn-outline-primary" type="submit">Create</button></a>
-        </p>
+        
 
         <script>
             const vm = new Vue({

@@ -53,6 +53,32 @@ def view_role_listings():
         ), 200
     except Exception as e:
         return jsonify({"error": str(e)}),500
+
+
+@app.route("/create_role_listing", methods=["POST"])
+def create_role_listing():
+    data=request.get_json()
+    if not all(key in data.keys() for
+               key in ('role_name','role_descr','skills_required','role_deadline')):
+        return jsonify({
+            "message": "Incoreect JSON object provided."
+        }),500
+    
+    roleListing=Listing(
+        role_name=data['role_name'], role_descr=data['role_descr'],
+        skills_required=data['skills_required'], role_deadline= data['skills_required']
+    )
+
+    # Commit to DB
+    try:
+        db.session.add(roleListing)
+        db.session.commit()
+        return jsonify(roleListing.to_dict()), 201
+    except Exception:
+        return jsonify({
+            "message": "Unable to commit to database."
+        }), 500
+
     
 # holds values of selected roles    
 # @app.route("/role", methods=['POST'])

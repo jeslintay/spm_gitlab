@@ -3,9 +3,18 @@
 
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+        </script>
 
     <title>Create Role</title>
 </head>
@@ -55,11 +64,14 @@
     </nav>
 
     <!-- Table for listings -->
-    <form>
-        <div id="main-container" class="container">
 
+    <div id="main_container" class="container">
+        <div class="d-flex">
             <h1 class="display-4">New Role</h1>
-
+            <div class="d-flex align-items-end ms-auto me-0 mb-3"><a href="./view_role_listings.html"><button
+                        class="btn btn-outline-primary" type="submit">Back</button></a></div>
+        </div>
+        <form>
             <table id="roleTable" class='table table-striped' border='1'>
                 <thead class='thead-dark'>
                     <tr>
@@ -73,31 +85,58 @@
                     <!-- form for role creation -->
                     <tr>
                         <td><input type="text" class="form-control" placeholder="Role Title" aria-label="Role Title"
-                                aria-describedby="basic-addon1"></td>
+                                v-model="role_name" aria-describedby="basic-addon1"></td>
                         <td><input type="text" class="form-control" placeholder="Description" aria-label="Description"
-                                aria-describedby="basic-addon1"></td>
+                                v-model="role_descr" aria-describedby="basic-addon1"></td>
                         <td><input type="text" class="form-control" placeholder="Skill(s)" aria-label="Skill(s)"
-                                aria-describedby="basic-addon1"></td>
-                        <td><input type="text" class="form-control" placeholder="DD/MM/YYYY" aria-label="Deadline"
-                                aria-describedby="basic-addon1"></td>
+                                v-model="skills_required" aria-describedby="basic-addon1"></td>
+                        <td><input type="date" class="form-control" placeholder="YYYY-MM-DD" aria-label="Deadline"
+                                v-model="role_deadline" aria-describedby="basic-addon1"></td>
                     </tr>
                 </tbody>
             </table>
-    </form>
+        </form>
 
-    <p>
-        <!-- need to code it to update the current list -->
-        <td><a href="#"><button class="btn btn-outline-primary" type="submit">Save</button></a>
-    </p>
+        <p>
+            <!-- need to code it to update the current list -->
+            <button @click="saveNewrole" class="btn btn-outline-primary" type="submit">Save</button>
+        </p>
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous">
-    
-    
-    </script>
+        <script>
+            const vm = new Vue({
+                el: '#main_container',
+                data: {
+                    role_name: "",
+                    role_descr: "",
+                    skills_required: "",
+                    role_deadline: ""
+                },
+                methods: {
+                    saveNewrole: function () {
+                        axios.post('http://localhost:5000/create_role_listing', {
+                            role_name: this.role_name,
+                            role_descr: this.role_descr,
+                            skills_required: this.skills_required,
+                            role_deadline: this.skills_required
+                        })
+                            .then(response => {
+                                window.location.replace("./view_role_listing.html");
+                                return false;
+                            })
+                            .catch(error => { this.error = error.response.data.message });
+                    }
+                },
+                // mounted: function () {
+                //     axios.get('http://localhost:5000/create_role_listing')
+                //         .then(response => {
+                //             this.roles = response.data.data;
+                //         })
+                //         .catch(error => alert(error));
+                // }
+            });
+        </script>
 </body>
 
 </html>
