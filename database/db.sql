@@ -61,3 +61,8 @@ CREATE TABLE IF NOT EXISTS Role_Listing (
     CONSTRAINT role_listing_pk PRIMARY KEY (role_name)
 )
 
+INSERT INTO Access_Control (Access_ID, Access_Control_Name)
+VALUES (1,"Admin"),
+(2,"User"),
+(3,"Manager"),
+(4,"HR");
