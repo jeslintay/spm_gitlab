@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicant's Profile</title>
+      <!-- Bootstrap CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+      </script>
+<script src="view_role_listings.html">
+
+</script>
+</head>
+<body>
+
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <!-- APP name -->
+                <a class="navbar-brand" href="#">IS212 APP</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+    
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    
+                        <!-- home -->
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">Home</a>
+                        </li>
+    
+                        <!-- List of Available Roles -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="view_role_listings.html">List of Available Roles</a>
+                        </li>
+                    </ul>
+    
+                    <!-- Profile -->
+                    <div class="nav-item dropdown d-flex me-2">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            Profile
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">Skills Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    
+        <!-- Table for listings -->
+    
+        <div id="main_container" class="container">
+            <div class="d-flex">
+                <h1 class="display-4">Applicant's Profile</h1>
+                <div class="d-flex align-items-end ms-auto me-0 mb-3"><a href="./view_role_listings.html"><button
+                            class="btn btn-outline-primary" type="submit">Back</button></a></div>
+            </div>
+            <form>
+                <table id="roleTable" class='table table-striped' border='1'>
+                    <thead class='thead-dark'>
+                        <img src="staff.jpeg" class="rounded float-left" alt="Applicant's Profile Picture">
+                        <tr>
+                            <th><a href="#">{staff_ID}</a></th>
+                            <th><a href="#">{staff_Fname}</a></th>
+                            <th><a href="#">{staff_Lname}</a></th>
+                            <th><a href="#">{Dept}</a></th>
+                            <th><a href="#">{Country}</a></th>
+                            <th><a href="#">{Email}</a></th>
+                            <th><a href="#">{Applicant's Skill(s)}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- populate the information from database-->
+                        <tr>
+                          <td><input type="integer" class="form-control" placeholder="Staff_ID from DB/Staff" 
+                            aria-label="Staff_ID" aria-describedby="basic-addon1"></td>
+            
+                        <td><input type="text" class="form-control" placeholder="Staff_FName from DB/Staff" 
+                            aria-label="Staff_FName" aria-describedby="basic-addon1"></td>
+                        
+                       <td><input type="text" class="form-control" placeholder="Staff_LName from DB/Staff" 
+                            aria-label="Staff_LName" aria-describedby="basic-addon1"></td>
+
+                        <td><input type="text" class="form-control" placeholder="Dept from DB/Staff" 
+                            aria-label="Dept" aria-describedby="basic-addon1"></td>
+                        
+                        <td><input type="text" class="form-control" placeholder="Country from DB/Staff" 
+                            aria-label="Country" aria-describedby="basic-addon1"></td>
+                        
+                        <td><input type="email" class="form-control" placeholder="Email from DB/Staff" 
+                            aria-label="Email Address" aria-describedby="basic-addon1"></td>
+                        
+                        <td><input type="text" class="form-control" placeholder="Skill_Name from DB/Staff_Skill" 
+                                aria-label="Applicant's Skill(s)" aria-describedby="basic-addon1"></td>
+                             
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="#"><button class="btn btn-outline-success" type="submit">Accept</button></a>
+                                <a href="#"><button class="btn btn-outline-danger" type="submit">Reject</button></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+    
+    
+    
+    </body>
+    
+    </html>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384
