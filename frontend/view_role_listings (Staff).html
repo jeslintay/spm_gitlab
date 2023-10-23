@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+        </script>
+
+
+    <title>List of Available Roles</title>
+    <style>
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        a:hover {
+            color: gold
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <!-- APP name -->
+            <a class="navbar-brand" href="#">IS212 APP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <!-- home -->
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+
+                    <!-- List of Available Roles -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="view_role_listings (Staff).html">List of Available Roles</a>
+                    </li>
+                </ul>
+
+                <!-- Profile -->
+                <div class="nav-item dropdown d-flex me-2">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown">
+                        Profile
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Skills Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Table for listings -->
+    <div id="main-container" class="container">
+
+        <h1 class="display-4">List of Available Roles</h1>
+
+        <table id="roleTable" class='table table-striped' border='1'>
+            <thead id= "headers" class='thead-dark'>
+                <tr>
+                    <th>Role Title</th>
+                    <th>Deadline</th>
+                </tr>
+            </thead>
+            <tbody id="body">
+                <tr v-for="record in roles">
+                    <td id="testing"><a v-on:click="sendRole(record)" href="example_role_content (Staff).html">{{record.role_name}}</a></td>
+                    <td>{{record.role_deadline}}</td>
+                    <td class="d-flex justify-content-center"><a href="#"><button class="btn btn-outline-primary" type="button">Apply</button></a></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        
+
+        <script>
+            const vm = new Vue({
+                el: '#main-container',
+                data: {
+                    roles: []
+                },
+                methods: {
+                    sendRole(record) {
+                        // axios.post('http://localhost:5000/role', {record})
+                        //     .then(response => {
+                        //         this.record = response.data.data;
+                        //     })
+                        //     .catch(error => alert(error));
+                        localStorage.setItem("role", JSON.stringify(record));
+
+                    }
+                },
+                mounted: function () {
+                    axios.get('http://localhost:5000/view_role_listings')
+                        .then(response => {
+                            this.roles = response.data.data;
+                            this.roles.forEach(element => {
+                                element.role_deadline = new Date(element.role_deadline);
+                                // convert role_deadline to YYYY/MM/DD format
+                                element.role_deadline = element.role_deadline.toISOString().slice(0, 10);
+                                
+                            });
+                        })
+                        .catch(error => alert(error));
+                }
+            });
+
+        </script>
+
+
+
+</body>
+
+</html>

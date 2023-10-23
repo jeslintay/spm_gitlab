@@ -59,7 +59,7 @@
 
           <!-- List of Available Roles -->
           <li class="nav-item">
-            <a class="nav-link" href="view_role_listings.html">List of Available Roles</a>
+            <a class="nav-link" href="view_role_listings (HR).html">List of Available Roles</a>
           </li>
         </ul>
 
@@ -85,7 +85,7 @@
   <div id="main_container" class="container">
     <div class="d-flex">
       <h1 class="display-4">{{role_name}}</h1>
-      <div class="d-flex align-items-end ms-auto me-0 mb-3"><a href="view_role_listings.html"><button class="btn btn-outline-primary" type="submit">Back</button></a></div> 
+      <div class="d-flex align-items-end ms-auto me-0 mb-3"><a href="view_role_listings (HR).html"><button class="btn btn-outline-primary" type="submit">Back</button></a></div> 
     </div>
 
     <table id="roleTable" class='table table-striped' border='1'>
@@ -127,13 +127,13 @@
         </thead>
         <tbody>
           <!-- need a v-for in this tr tag -->
-          <tr class="table-secondary">
+          <tr v-for="staffName" class="table-secondary">
             <td>
               <a href="#">{staff_name}</a>
             </td>
             <td>
               <!-- dropdown -->
-              <a href="#"><button class="btn btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+              <a href="#"><button class="btn btn-outline-primary" type="button" @onclick="skillsData" data-bs-toggle="collapse" data-bs-target="#collapseExample"
                 aria-expanded="false" aria-controls="collapseExample">
                 View Mismatch
               </button></a>              
@@ -148,7 +148,7 @@
             <div class="collapse" id="collapseExample">
               
               <strong>Staff Skills:</strong> {function to loop the skills}<br>
-              <strong>Mismatched Skills:</strong> {function to check}
+              <strong>Mismatched Skills:</strong> {function to check} 
               <div id="line"></div>
           
             </div>

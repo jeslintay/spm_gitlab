@@ -40,7 +40,7 @@
 
                     <!-- List of Available Roles -->
                     <li class="nav-item">
-                        <a class="nav-link" href="view_role_listings.html">List of Available Roles</a>
+                        <a class="nav-link" href="view_role_listings (HR).html">List of Available Roles</a>
                     </li>
                 </ul>
 
@@ -68,7 +68,7 @@
     <div id="main_container" class="container">
         <div class="d-flex">
             <h1 class="display-4">New Role</h1>
-            <div class="d-flex align-items-end ms-auto me-0 mb-3"><a href="./view_role_listings.html"><button
+            <div class="d-flex align-items-end ms-auto me-0 mb-3"><a href="view_role_listings (HR).html"><button
                         class="btn btn-outline-primary" type="submit">Back</button></a></div>
         </div>
         <form>
@@ -111,18 +111,19 @@
                     role_name: "",
                     role_descr: "",
                     skills_required: "",
-                    role_deadline: ""
+                    role_deadline: Date(),
                 },
                 methods: {
                     saveNewrole: function () {
+                        console.log(this.role_deadline);
                         axios.post('http://localhost:5000/create_role_listing', {
                             role_name: this.role_name,
                             role_descr: this.role_descr,
                             skills_required: this.skills_required,
-                            role_deadline: this.skills_required
+                            role_deadline: this.role_deadline
                         })
                             .then(response => {
-                                window.location.replace("./view_role_listing.html");
+                                window.location.replace("view_role_listings (HR).html");
                                 return false;
                             })
                             .catch(error => { this.error = error.response.data.message });

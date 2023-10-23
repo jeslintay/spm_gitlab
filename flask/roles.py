@@ -42,9 +42,11 @@ class Listing(db.Model):
 @app.route("/view_role_listings")
 def view_role_listings():
     try:
+
         # vrl_list = db.session.query(Listing).all()
         vrl_list = db.session.execute(db.select(Listing)).scalars()
         # print(vrl_list)
+        
         return jsonify(
             {
                 "data": [listing.to_dict()
@@ -53,11 +55,12 @@ def view_role_listings():
         ), 200
     except Exception as e:
         return jsonify({"error": str(e)}),500
-
+    
 
 @app.route("/create_role_listing", methods=["POST"])
 def create_role_listing():
     data=request.get_json()
+    print(data.values())
     if not all(key in data.keys() for
                key in ('role_name','role_descr','skills_required','role_deadline')):
         return jsonify({
@@ -66,7 +69,7 @@ def create_role_listing():
     
     roleListing=Listing(
         role_name=data['role_name'], role_descr=data['role_descr'],
-        skills_required=data['skills_required'], role_deadline= data['skills_required']
+        skills_required=data['skills_required'], role_deadline= data['role_deadline']
     )
 
     # Commit to DB

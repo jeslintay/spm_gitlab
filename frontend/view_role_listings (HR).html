@@ -52,7 +52,7 @@
 
                     <!-- List of Available Roles -->
                     <li class="nav-item">
-                        <a class="nav-link" href="view_role_listings.html">List of Available Roles</a>
+                        <a class="nav-link" href="view_role_listings (HR).html">List of Available Roles</a>
                     </li>
                 </ul>
 
@@ -90,7 +90,7 @@
             </thead>
             <tbody id="body">
                 <tr v-for="record in roles">
-                    <td id="testing"><a v-on:click="sendRole(record)" href="example_role_content.html">{{record.role_name}}</a></td>
+                    <td id="testing"><a v-on:click="sendRole(record)" href="example_role_content (HR).html">{{record.role_name}}</a></td>
                     <td>{{record.role_deadline}}</td>
                     <td class="d-flex justify-content-center"><a href="edit_role_listing.html"><button class="btn btn-outline-primary" type="submit">Edit</button></a></td>
                 </tr>
@@ -121,6 +121,12 @@
                     axios.get('http://localhost:5000/view_role_listings')
                         .then(response => {
                             this.roles = response.data.data;
+                            this.roles.forEach(element => {
+                                element.role_deadline = new Date(element.role_deadline);
+                                // convert role_deadline to YYYY/MM/DD format
+                                element.role_deadline = element.role_deadline.toISOString().slice(0, 10);
+                                
+                            });
                         })
                         .catch(error => alert(error));
                 }
