@@ -79,31 +79,58 @@
     <div id="main-container" class="container">
 
         <h1 class="display-4">List of Available Roles</h1>
+        <div class="row">
+            <div class="col-3 pb-2">
+                <label for="search_input" class="form-label">Search:</label>
+                <input id="search_input" class="form-control border-dark" type="text" v-model="input_title" @keyup="showHint()">
+            </div>
+            <div class="col-3 pb-2">
+
+                <label for="filter" class="form-label">Filter by:</label>
+                <select v-model="filterby" id="filter" class="form-select border-dark text-center" aria-label="Default select example">
+                    <option selected>Role Title</option>
+                    <option>Skills Required</option>
+                </select>
+            </div>
+            
+        </div>
+
+        
+        
 
         <table id="roleTable" class='table table-striped' border='1'>
-            <thead id= "headers" class='thead-dark'>
+            <thead id="headers" class='thead-dark'>
                 <tr>
                     <th>Role Title</th>
+                    <th>Description</th>
+                    <th>Skills Required</th>
                     <th>Deadline</th>
                 </tr>
             </thead>
             <tbody id="body">
-                <tr v-for="record in roles">
-                    <td id="testing"><a v-on:click="sendRole(record)" href="example_role_content (Staff).html">{{record.role_name}}</a></td>
+                <tr v-for="record in filtered">
+                    <td id="testing"><a v-on:click="sendRole(record)"
+                            href="example_role_content (Staff).html">{{record.role_name}}</a></td>
+                    <td>{{record.role_descr}}</td>
+                    <td>{{record.skills_required}}</td>
                     <td>{{record.role_deadline}}</td>
-                    <td class="d-flex justify-content-center"><a href="#"><button class="btn btn-outline-primary" type="button">Apply</button></a></td>
+                    <td class="d-flex justify-content-center"><a href="#"><button class="btn btn-outline-primary"
+                                type="button">Apply</button></a></td>
                 </tr>
             </tbody>
         </table>
 
 
-        
+
 
         <script>
             const vm = new Vue({
                 el: '#main-container',
                 data: {
-                    roles: []
+                    roles: [],
+                    filtered: [],
+                    input_title: "",
+                    filterby: "Role Title"
                 },
                 methods: {
                     sendRole(record) {
@@ -114,6 +141,24 @@
                         //     .catch(error => alert(error));
                         localStorage.setItem("role", JSON.stringify(record));
 
+                    },
+                    showHint(){
+                        console.log(this.input_title)
+                        axios.get('http://localhost:5000/view_role_listings')
+                        .then(response => {
+                            this.roles = response.data.data;
+                            this.roles.forEach(element => {
+                                element.role_deadline = new Date(element.role_deadline);
+                                // convert role_deadline to YYYY/MM/DD format
+                                element.role_deadline = element.role_deadline.toISOString().slice(0, 10);
+                            });
+                            if(this.filterby === "Role Title"){
+                                this.filtered = this.roles.filter(obj => obj.role_name.toLowerCase().includes(this.input_title.toLowerCase()));
+                            }else{
+                                this.filtered = this.roles.filter(obj => obj.skills_required.toLowerCase().includes(this.input_title.toLowerCase()));
+                            }
+                        })
+                        .catch(error => alert(error));
                     }
                 },
                 mounted: function () {
@@ -124,7 +169,19 @@
                                 element.role_deadline = new Date(element.role_deadline);
                                 // convert role_deadline to YYYY/MM/DD format
                                 element.role_deadline = element.role_deadline.toISOString().slice(0, 10);
-                                
+                                // console.log(element.role_name)
+                                if (this.filtered.length == 0) {
+                                    this.filtered.push(element);
+                                } else if (this.filtered.some(obj => obj.role_name === element.role_name)) {
+                                    console.log(element);
+
+                                    var i = this.filtered.findIndex(obj => obj.role_name === element.role_name);
+                                    this.filtered[i].skills_required = this.filtered[i].skills_required + ", " + element.skills_required;
+                                } else {
+                                    this.filtered.push(element);
+                                }
+                                const curreDate = new Date();
+                                this.filtered = this.filtered.filter(obj => new Date(obj.role_deadline) > curreDate);
                             });
                         })
                         .catch(error => alert(error));
