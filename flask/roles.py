@@ -24,7 +24,7 @@ class Listing(db.Model):
 
     role_name = db.Column(db.String(20), primary_key=True)
     role_descr = db.Column(db.String(200))
-    skills_required = db.Column(db.String(200))
+    skills_required = db.Column(db.String(200), primary_key=True)
     role_deadline = db.Column(db.Date)
 
     def to_dict(self):
@@ -60,27 +60,31 @@ def view_role_listings():
 @app.route("/create_role_listing", methods=["POST"])
 def create_role_listing():
     data=request.get_json()
-    print(data.values())
+    print(data)
     if not all(key in data.keys() for
                key in ('role_name','role_descr','skills_required','role_deadline')):
         return jsonify({
             "message": "Incoreect JSON object provided."
         }),500
     
-    roleListing=Listing(
-        role_name=data['role_name'], role_descr=data['role_descr'],
-        skills_required=data['skills_required'], role_deadline= data['role_deadline']
-    )
-
+    Listings = []
+    for skill in data['skills_required']:
+        print(skill)
+        roleListing=Listing(
+            role_name=data['role_name'], role_descr=data['role_descr'],
+            skills_required=skill, role_deadline= data['role_deadline'])
+        Listings.append(roleListing.to_dict())
     # Commit to DB
-    try:
-        db.session.add(roleListing)
-        db.session.commit()
-        return jsonify(roleListing.to_dict()), 201
-    except Exception:
-        return jsonify({
-            "message": "Unable to commit to database."
-        }), 500
+        try:
+            db.session.add(roleListing)
+            db.session.commit()
+        except Exception:
+            return jsonify({
+                "message": "Unable to commit to database."
+            }), 500
+        
+    return jsonify(Listings), 201
+
 
     
 # holds values of selected roles    
