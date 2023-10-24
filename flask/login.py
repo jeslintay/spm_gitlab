@@ -19,39 +19,16 @@ db = SQLAlchemy(app)
 
 CORS(app)
 
-
-class Accounts(db.Model):
-    __tablename__ = 'Accounts'
-
-    Staff_ID = db.Column(db.Integer, primary_key=True)
-    Password = db.Column(db.String(10))
-    def to_dict(self):
-        """
-        'to_dict' converts the object into a dictionary,
-        in which the keys correspond to database columns
-        """
-        columns = self.__mapper__.column_attrs.keys()
-        result = {}
-        for column in columns:
-            result[column] = getattr(self, column)
-        return result
-
 class Accesscontrol(db.Model):
     __tablename__ = 'Access_Control'
 
     Access_ID = db.Column(db.Integer, primary_key=True)
     Access_Control_Name = db.Column(db.String(20))
 
-    def to_dict(self):
-        """
-        'to_dict' converts the object into a dictionary,
-        in which the keys correspond to database columns
-        """
-        columns = self.__mapper__.column_attrs.keys()
-        result = {}
-        for column in columns:
-            result[column] = getattr(self, column)
-        return result
+
+    def json(self):
+        return {"Access_ID": self.Access_ID, "Access_Control_Name": self.Access_Control_Name}
+
 
 class Staff(db.Model):
     __tablename__ = 'Staff'
@@ -63,16 +40,9 @@ class Staff(db.Model):
     Country = db.Column(db.String(50))
     Email = db.Column(db.String(50))
     Access_Rights = db.Column(db.Integer)
-    def to_dict(self):
-        """
-        'to_dict' converts the object into a dictionary,
-        in which the keys correspond to database columns
-        """
-        columns = self.__mapper__.column_attrs.keys()
-        result = {}
-        for column in columns:
-            result[column] = getattr(self, column)
-        return result
+
+    def json(self):
+        return {"Staff_ID": self.Staff_ID, "Staff_FName": self.Staff_FName, "Staff_LName": self.Staff_LName, "Dept": self.Dept,"Country": self.Country,"Email": self.Email,"Access_Rights": self.Access_Rights}
 
 # Testing
 @app.route('/login')
@@ -81,39 +51,23 @@ def home():
 
 
 
-@app.route('/check_account',methods=['POST'])
-def check_account():
-    data = request.get_json()
-    staff_id = data.get('staff_id')
-    password = data.get('password')
-    staff_acc = db.session.execute(
-                db.select(Accounts).
-                filter_by(Staff_ID=staff_id)
-             ).scalar_one_or_none().to_dict()
-    # staff = Accounts.query.filter_by(Staff_ID=staff_id).first()
-    staff_detail = db.session.execute(
-                db.select(Staff).
-                filter_by(Staff_ID=staff_id)
-             ).scalar_one_or_none().to_dict()
-    
-    accesscontrol_detail = db.session.execute(
-            db.select(Accesscontrol).
-            filter_by(Access_ID=staff_detail['Access_Rights'])
-            ).scalar_one_or_none()
-    
-    if staff_acc:
-        if staff_acc['Password'] == password:
-            return jsonify({
-                "data": accesscontrol_detail.to_dict()
-            }), 200
-        else:
-            return jsonify({
-            "message": "Password is incorrect."
-        }), 404
-    else:
-        return jsonify({
-            "message": "Staff ID not found."
-        }), 404
+@app.route('/getAccessID/<int:staff_id>')
+def getAccessID(staff_id):
+    staff = Staff.query.filter_by(Staff_ID=staff_id).first().json()
+    accessright = Accesscontrol.query.filter_by(Access_ID=staff['Access_Rights']).first()
+    if accessright:
+        return jsonify(
+            {
+                "code": 200,
+                "data": accessright.json()
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Access not found."
+        }
+    ), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
