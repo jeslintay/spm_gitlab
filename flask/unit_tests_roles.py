@@ -13,3 +13,7 @@ class TestListing(unittest.TestCase):
             'role_deadline': '2024-12-31'
             }
         )
+
+if __name__ == '__main__': 
+    unittest.main()
+    
