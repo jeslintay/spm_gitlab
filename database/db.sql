@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS Staff (
     CONSTRAINT staff_fk FOREIGN KEY (Access_Right) REFERENCES Access_Control(Access_ID) 
 );
 
+
+
 CREATE TABLE IF NOT EXISTS role (
     role_name varchar(20) NOT NULL,
     role_descr longtext NOT NULL,
@@ -28,7 +30,7 @@ CREATE TABLE IF NOT EXISTS role (
 
 CREATE TABLE IF NOT EXISTS skills(
     Skill_Name varchar(50) NOT NULL,
-    Skill_Descr varchar(1000) NOT NULL,
+    Skill_Descr varchar(2000) NOT NULL,
     CONSTRAINT skills_pk PRIMARY KEY (Skill_Name)
 );
 
@@ -50,26 +52,40 @@ CREATE TABLE IF NOT EXISTS Staff_Skill (
 
 CREATE TABLE IF NOT EXISTS Role_Listing (
     role_name VARCHAR(20) NOT NULL,
-    role_descr VARCHAR(200) NOT NULL,
-    skills_required VARCHAR(200) NOT NULL,
+    role_descr VARCHAR(2000) NOT NULL,
+    skills_required VARCHAR(1000) NOT NULL,
     role_deadline DATE NOT NULL,
     CONSTRAINT role_listing_pk PRIMARY KEY (role_name,skills_required)
 );
 
-INSERT INTO Role_Listing (role_name, role_descr, skills_required, role_deadline) VALUES
-('HR Director', 'NIL', 'Talent Management', '2024-09-25'),
-('HR Director', 'NIL', 'Finance', '2024-10-25'), 
-('HR Director', 'NIL', 'Problem Solving', '2024-10-25'), 
-('Senior Engineer', 'NIL', 'Engineering', '2024-10-10'), 
-('Finance Manager', 'NIL', 'Problem Solving', '2023-10-10'), 
-('Senior Engineer', 'NIL', 'Information Technology', '2024-12-15'), 
-('Senior Engineer', 'NIL', 'Problem Solving', '2024-12-15'),
-('HR Executive', 'NIL', 'Administration and Support', '2023-11-10'),
-('Sales Manager', 'NIL', 'Sales and Communication', '2024-11-30'), 
-('Consultant', 'NIL', 'Consulting', '2024-12-20'), 
-('Engineering Director', 'NIL', 'Information Technology', '2024-10-10'), 
-('Finance  Executive', 'NIL', 'Finance', '2023-10-05'); 
 
+CREATE TABLE IF NOT EXISTS applicants (
+    app_ID INT AUTO_INCREMENT NOT NULL,
+    Staff_ID INT NOT NULL,
+    Staff_FName VARCHAR(50) NOT NULL,
+    Staff_LName VARCHAR(50) NOT NULL,
+    role_name VARCHAR(20) NOT NULL,
+    CONSTRAINT app_id_pk PRIMARY KEY (app_ID),
+    CONSTRAINT staff_id_fk FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID),
+    CONSTRAINT role_name_fk FOREIGN KEY (role_name) REFERENCES Role_Listing(role_name)
+);
+
+
+
+INSERT INTO Role_Listing (role_name, role_descr, skills_required, role_deadline) VALUES
+('HR Director', "The HR Director is responsible for establishing the overall talent management strategies and frameworks to identify, prepare and position the right talent to drive organizational success. He/She formulates career development frameworks and programs to provide fulfilling career opportunities to employees in the organization. He liaises with senior business stakeholders to formulate robust succession plans for business-critical roles in the organization, ensuring future viability and alignment with business plans and direction. He is responsible for establishing retirement and exit policies and guidelines, and evaluating the business impact of redundancy, retirement, and exit decisions. He also guides and advises senior business leaders in the management and communication of sensitive talent decisions. As a department head, he is responsible for setting the direction and articulating goals and objectives for the team, and driving the integration of Skills Frameworks across the organization's talent management plans.", 'Talent Management', '2024-09-25'),
+('HR Director', "The HR Director is responsible for establishing the overall talent management strategies and frameworks to identify, prepare and position the right talent to drive organizational success. He/She formulates career development frameworks and programs to provide fulfilling career opportunities to employees in the organization. He liaises with senior business stakeholders to formulate robust succession plans for business-critical roles in the organization, ensuring future viability and alignment with business plans and direction. He is responsible for establishing retirement and exit policies and guidelines, and evaluating the business impact of redundancy, retirement, and exit decisions. He also guides and advises senior business leaders in the management and communication of sensitive talent decisions. As a department head, he is responsible for setting the direction and articulating goals and objectives for the team, and driving the integration of Skills Frameworks across the organization's talent management plans.", 'Finance', '2024-10-25'), 
+('HR Director', "The HR Director is responsible for establishing the overall talent management strategies and frameworks to identify, prepare and position the right talent to drive organizational success. He/She formulates career development frameworks and programs to provide fulfilling career opportunities to employees in the organization. He liaises with senior business stakeholders to formulate robust succession plans for business-critical roles in the organization, ensuring future viability and alignment with business plans and direction. He is responsible for establishing retirement and exit policies and guidelines, and evaluating the business impact of redundancy, retirement, and exit decisions. He also guides and advises senior business leaders in the management and communication of sensitive talent decisions. As a department head, he is responsible for setting the direction and articulating goals and objectives for the team, and driving the integration of Skills Frameworks across the organization's talent management plans.", 'Problem Solving', '2024-10-25'), 
+('Senior Engineer', "The Senior Engineer applies advanced engineering principles and techniques to troubleshoot complex engineering problems encountered within the manufacturing facility and provides expert technical advice to guide the installation and maintenance of equipment and systems. He/She is expected to lead the technical cross-collaboration with the Process Development/Manufacturing Science and Technology (PD/MSAT) department in order to identify appropriate biopharmaceuticals manufacturing equipment and optimize their functionalities. The Senior Engineer leads manufacturing equipment and systems innovation projects by guiding feasibility assessments and tests on new technologies. He is expected to review and approve solutions and initiatives to optimize machine availability while managing energy and utility use. He sets parameters for equipment qualification and validation in line with biopharmaceuticals manufacturing regulatory requirements. The Principal/Engineer must ensure compliance with Standard Operating Procedures (SOPs), Health, Safety, and Environment (HSE) regulations and Current Good Manufacturing Practices (CGMPs) within his purview.", 'Engineering', '2024-10-10'), 
+('Finance Manager', "The Finance Manager is the lead finance business partner for the organization and has responsibilities covering all aspects of financial management, performance management, financial accounting, budgeting, corporate reporting, etc. He/she has sound technical as well as management skills and be able to lead a team consisting of finance professionals with varied, in-depth or niche technical knowledge and abilities; consolidating their work and ensuring its quality and accuracy, especially for reporting purposes. The Finance Manager is expected to provide sound financial advice and counsel on working capital, financing, or the financial position of the organization by synthesizing internal and external data and studying the economic environment. He often has a key role in implementing best practices in order to identify and manage all financial and business risks and to meet the organization's desired business and fiscal goals. He is expected to have a firm grasp of economic and business trends and to implement work improvement projects that are geared towards quality, compliance, and efficiency in finance.", 'Problem Solving', '2023-10-10'), 
+('Senior Engineer', "The Senior Engineer applies advanced engineering principles and techniques to troubleshoot complex engineering problems encountered within the manufacturing facility and provides expert technical advice to guide the installation and maintenance of equipment and systems. He/She is expected to lead the technical cross-collaboration with the Process Development/Manufacturing Science and Technology (PD/MSAT) department in order to identify appropriate biopharmaceuticals manufacturing equipment and optimize their functionalities. The Senior Engineer leads manufacturing equipment and systems innovation projects by guiding feasibility assessments and tests on new technologies. He is expected to review and approve solutions and initiatives to optimize machine availability while managing energy and utility use. He sets parameters for equipment qualification and validation in line with biopharmaceuticals manufacturing regulatory requirements. The Principal/Engineer must ensure compliance with Standard Operating Procedures (SOPs), Health, Safety, and Environment (HSE) regulations and Current Good Manufacturing Practices (CGMPs) within his purview.", 'Information Technology', '2024-12-15'), 
+('Senior Engineer', "The Senior Engineer applies advanced engineering principles and techniques to troubleshoot complex engineering problems encountered within the manufacturing facility and provides expert technical advice to guide the installation and maintenance of equipment and systems. He/She is expected to lead the technical cross-collaboration with the Process Development/Manufacturing Science and Technology (PD/MSAT) department in order to identify appropriate biopharmaceuticals manufacturing equipment and optimize their functionalities. The Senior Engineer leads manufacturing equipment and systems innovation projects by guiding feasibility assessments and tests on new technologies. He is expected to review and approve solutions and initiatives to optimize machine availability while managing energy and utility use. He sets parameters for equipment qualification and validation in line with biopharmaceuticals manufacturing regulatory requirements. The Principal/Engineer must ensure compliance with Standard Operating Procedures (SOPs), Health, Safety, and Environment (HSE) regulations and Current Good Manufacturing Practices (CGMPs) within his purview.", 'Problem Solving', '2024-12-15'),
+('HR Executive', "HR Team executes planned talent outreach and engagement activities to source for potential candidates and maintains an optimal experience for employees. He/She conducts the initial screening of potential candidates, administers assessments and prepares employment contracts as per guidelines. He tracks the conversion success rate for each sourcing channel and provides administrative and logistical support during onboarding. He administers employee engagement surveys and collates responses and feedback while ensuring confidentiality of information provided.", 'Administration and Support', '2023-11-10'),
+('Sales Manager', "The Sales Manager is responsible for managing the organization\'s sales growth. By analyzing client segmentation and competitor landscape, he/she develops sales strategies. He supports lead generation and conducts business and contract negotiations to increase client acquisition and boost retention. Innovative and resourceful, he demonstrates initiative in identifying new opportunities both locally and regionally and converting them into actual sales. He builds good rapport with new and existing clients by pro-actively anticipating clients\' needs and identifying business solutions to meet those needs. He networks extensively outside of the office to stay in close contact with the key industry stakeholders.", 'Sales and Communication', '2024-11-30'), 
+('Consultant', "The Consultant is responsible for providing Sales technical expertise to the sales team and clients during the sales process. He/She delivers presentations and technical demonstrations of the organization\'s products to prospective clients. He translates the client\'s business requirements into technical specifications and requirements and provides technical inputs for proposals, tenders, bids, and any relevant documents. He uses prescribed guidelines or policies to analyze and solve problems. He works in a fast-paced and dynamic environment and travels frequently to clients\' premises for technical sales pitches and meetings. He is familiar with client relationship management and sales tools. He possesses deep product and technical knowledge and is knowledgeable of the trends, developments, and challenges of the industry domain. The Sales Consultant displays effective listening skills and is inquisitive in nature. He possesses deep technical and domain knowledge, pays attention to detail, and has strong analytical and problem-solving capabilities. He has a service-oriented personality and is a team player who works towards developing solutions collaboratively.", 'Consulting', '2024-12-20'), 
+('Developer', "The Developer leads important projects and possesses capability to make breakthroughs in design, development, testing, debugging, and implementing software applications or specialized utility programs in support of end users\' needs on platforms. He/She plans and coordinates regular updates and recommends improvements to existing applications. He identifies and resolves issues which have organization-wide and long-term impact. He identifies security risks, creates requirements to capture security issues, and performs initial threat modeling to ensure coding standards meet security requirements. He develops and maintains the software configuration management plan and oversees the building, verification, and implementation of software releases. He provides guidance and technical support to the quality testing teams. He works in a team setting and is proficient in programming languages required by the organization. He is familiar with software development tools and standards, as well as the relevant software platforms on which the solution is deployed on. The Developer is imaginative and creative in exploring a range of application designs and solutions. He is able to engage and support others in the team, readily put forth his ideas in a clear and compelling manner.", 'Consulting', '2024-12-20'), 
+('Engineering Director', "The Engineering Director is responsible for spearheading the strategic planning, design and implementation of complex engineering solutions to meet customers requirements. He/She drives direction and strategy for the development and execution of engineering projects, and ensures alignment to the organisational strategy, vision and mission. He formulates strategies and frameworks to drive workplace health, safety, risk and environmental management in accordance with local and international regulations. He develops the organisations technology roadmap and drives continuous improvement strategies. In addition, he leverages his deep technical expertise and industry experience to develop technical capabilities and domain expertise for the organisation. He is a professional engineer, specialising in mechanical, electrical, control and instrumentation, civil, structural or geotechnical engineering disciplines.
+<br> He is the organisations technical expert who advises senior management and business partners on complex engineering matters. He maintains and builds strong links with the external engineering community and establishes best practises in the implementation of engineering standards and design. He is a strategic and creative thinker, demonstrates exceptional leadership and problem-solving skills, and establishes strategic partnerships.",'Budgeting', '2024-01-10');
 
 
 INSERT INTO Access_Control (Access_ID, Access_Control_Name)
@@ -3672,3 +3688,12 @@ INSERT INTO Staff_Skill (staff_id, skill_name) VALUES
 ,('190092','User Interface Design')
 ,('190095','User Interface Design')
 ,('210036','User Interface Design');
+
+
+INSERT INTO applicants (app_ID, Staff_ID, Staff_FName, Staff_LName, role_name) VALUES
+(1, 140001, 'Derek', 'Tan', 'HR Director'),
+(2, 140003, 'Janice', 'Chan', 'Finance Manager'), 
+(3, 140901, 'Bao', 'Luu', 'HR Director'), 
+(4, 150076, 'Oliver', 'Chan', 'Senior Engineer'), 
+(5, 171015, 'Narong', 'Chua', 'Finance Manager'), 
+(6, 171015, 'Narong', 'Chua', 'Senior Engineer');
