@@ -105,6 +105,7 @@
                     <th>Description</th>
                     <th>Skills Required</th>
                     <th>Deadline</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="body">
@@ -115,12 +116,10 @@
                     <td>{{record.skills_required}}</td>
                     <td>{{record.role_deadline}}</td>
                     <td class="d-flex justify-content-center"><a href="#"><button class="btn btn-outline-primary"
-                                type="button">Apply</button></a></td>
+                                type="button" v-on:click="applyRole(record)" :disabled="appliedRoles.includes(record.role_name)">Apply</button></a></td>
                 </tr>
             </tbody>
         </table>
-
-
 
 
         <script>
@@ -130,7 +129,10 @@
                     roles: [],
                     filtered: [],
                     input_title: "",
-                    filterby: "Role Title"
+                    filterby: "Role Title",
+                    staffID : localStorage['staffID'],
+                    role_name: "",
+                    appliedRoles: [] // Keep track of applied roles
                 },
                 methods: {
                     sendRole(record) {
@@ -159,6 +161,19 @@
                             }
                         })
                         .catch(error => alert(error));
+                    },
+                    applyRole(record) {
+
+                        this.appliedRoles.push(record.role_name)
+
+                        axios.post('http://localhost:5000/apply_role', {
+                                staff_id: localStorage['staffID'],
+                                role_name: record.role_name
+                            })
+                            .then(response => {
+                                this.record = response.data.data;
+                            })
+                            .catch(error => alert(error));
                     }
                 },
                 mounted: function () {
@@ -182,6 +197,20 @@
                                 }
                                 const curreDate = new Date();
                                 this.filtered = this.filtered.filter(obj => new Date(obj.role_deadline) > curreDate);
+                            });
+                        })
+                        .catch(error => alert(error));
+
+                    // Disable "Apply" button if role_name in appliedRoles
+                    axios.get('http://localhost:5000/view_applications/' + this.staffID)
+                        .then(response => {
+                            this.applicants = response.data.data;   
+                            console.log(this.applicants)
+                            this.applicants.forEach(element => {
+                                if (element.role_name == record.role_name) {
+                                    this.appliedRoles.push(record.role_name);
+
+                                }
                             });
                         })
                         .catch(error => alert(error));

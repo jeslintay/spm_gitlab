@@ -37,6 +37,39 @@ class Listing(db.Model):
         for column in columns:
             result[column] = getattr(self, column)
         return result
+    
+class Staff(db.Model):
+    __tablename__ = 'Staff'
+
+    Staff_ID = db.Column(db.Integer, primary_key=True)
+    Staff_FName = db.Column(db.String(50))
+    Staff_LName = db.Column(db.String(50))
+    Dept = db.Column(db.String(50))
+    Country = db.Column(db.String(50))
+    Email = db.Column(db.String(50))
+    Access_Right = db.Column(db.Integer)
+
+    def json(self):
+        return {"Staff_ID": self.Staff_ID, "Staff_FName": self.Staff_FName, "Staff_LName": self.Staff_LName, "Dept": self.Dept,"Country": self.Country,"Email": self.Email,"Access_Right": self.Access_Right}
+
+class Applicants(db.Model):
+    __tablename__ = 'applicants'
+    app_ID = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    Staff_ID = db.Column(db.Integer,nullable=False)
+    Staff_FName = db.Column(db.String(20),nullable=False)
+    Staff_LName = db.Column(db.String(20),nullable=False)
+    role_name = db.Column(db.String(20),nullable=False)
+
+    def to_dict(self):
+        """
+        'to_dict' converts the object into a dictionary,
+        in which the keys correspond to database columns
+        """
+        columns = self.__mapper__.column_attrs.keys()
+        result = {}
+        for column in columns:
+            result[column] = getattr(self, column)
+        return result
 
 
 @app.route("/view_role_listings")
@@ -86,6 +119,48 @@ def create_role_listing():
     return jsonify(Listings), 201
 
 
+@app.route("/apply_role", methods=['POST'])
+def apply_role():
+    data = request.get_json()
+    staff_id = data['staff_id']
+    role_name = data['role_name']
+
+    # Query the staff record
+    staff = Staff.query.filter_by(Staff_ID=staff_id).first()
+
+    if staff is None:
+        return jsonify({"message": "Staff not found"}), 404
+
+    # Extract staff information
+    Staff_FName = staff.Staff_FName
+    Staff_LName = staff.Staff_LName
+
+    job_app = Applicants(
+        Staff_ID=staff_id, Staff_FName=Staff_FName, Staff_LName=Staff_LName, role_name=role_name
+    )
+
+    try:
+        db.session.add(job_app)
+        db.session.commit()
+        return jsonify(job_app.to_dict()), 201
+    except Exception as e:
+        return jsonify({"message": "Unable to commit to database.", "error": str(e)}), 500
+
+@app.route("/view_applications/<int:staff_id>")
+def view_applications(staff_id):
+    try:
+        # vrl_list = db.session.query(Listing).all()
+        vrl_list = db.session.execute(db.select(Applicants).filter_by(Staff_ID=staff_id)).scalars()
+        # print(vrl_list)
+        
+        return jsonify(
+            {
+                "data": [listing.to_dict()
+                        for listing in vrl_list]
+            }
+        ), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}),500
     
 # holds values of selected roles    
 # @app.route("/role", methods=['POST'])
