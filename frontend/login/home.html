@@ -33,10 +33,10 @@
             <input v-model="staffId" type="text" class="form-control" id="floatingInput" placeholder="190004">
             <label for="floatingInput">Staff ID</label>
           </div>
-          <!-- <div class="form-floating mb-3">
+          <div class="form-floating mb-3">
             <input v-model="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Password</label>
-          </div> -->
+          </div>
           <div class="checkbox mb-3">
 
           </div>
@@ -72,7 +72,7 @@
                   window.location.replace("http://localhost/spm_gitlab/frontend/view_role_listings%20(Staff).html");
                 }
                 localStorage.setItem("staffID", this.staffId);
-                /// to use: var staffid = localStorage['staffID'];
+                /// to get value -> var staffid = localStorage['staffID'];
 
 
               } else {
