@@ -64,7 +64,7 @@ def create_role_listing():
     if not all(key in data.keys() for
                key in ('role_name','role_descr','skills_required','role_deadline')):
         return jsonify({
-            "message": "Incoreect JSON object provided."
+            "message": "Incorrect JSON object provided."
         }),500
     
     Listings = []
