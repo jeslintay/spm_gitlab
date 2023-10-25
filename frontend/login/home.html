@@ -13,6 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
 
 
   </head>
@@ -47,40 +49,48 @@
   </div>
 
 
-    <script>
-      const app = Vue.createApp({
-        data(){
-          return {
-            staffId: '',
-            // password: '',
-            accessControlName: '',
-            error: ''
-          };
-        },
-        methods: {
-          signin() {
-                axios.get('http://localhost:5000/getAccessID/'+ this.staffId)
-                
-                .then(response => {
-                    if ('Access_Control_Name' in response.data.data) {
-                        this.accessControlName = response.data.data.Access_Control_Name;
-                        this.error = '';
-                        window.location.replace("http://localhost/spm_project/view_role_listings.html");
-                    } else {
-                        this.error = response.data.error;
-                        this.accessControlName = '';
-                    }
-                })
-                .catch(error => {
-                console.error(error);
-                alert(error);
-                });
+  <script>
+    const app = new Vue({
+      data() {
+        return {
+          staffId: '',
+          accessControlName: '',
+          error: ''
+        };
+      },
+      methods: {
+        signin() {
+          axios.get('http://localhost:5100/getAccessID/' + this.staffId)
+            .then(response => {
+              if ('Access_Control_Name' in response.data.data) {
+                this.accessControlName = response.data.data.Access_Control_Name;
+                this.error = '';
+                console.log(this.accessControlName)
+                if (this.accessControlName == 'HR') {
+                  window.location.replace("http://localhost/spm_gitlab/frontend/view_role_listings%20(HR).html");
+                } else if (this.accessControlName == 'User' || this.accessControlName == 'Admin' || this.accessControlName == 'Manager') {
+                  window.location.replace("http://localhost/spm_gitlab/frontend/view_role_listings%20(Staff).html");
+                }
+                localStorage.setItem("staffID", this.staffId);
+                /// to use: var staffid = localStorage['staffID'];
 
-          }
+
+              } else {
+                this.error = response.data.error;
+                this.accessControlName = '';
+              }
+            })
+            .catch(error => {
+              console.error(error);
+              alert(error);
+            });
         }
-      })
-
-    const vm = app.mount('#app')
+      }
+    });
+  
+    const vm = app.$mount('#app');
+  </script>
+  
     </script>
     </body>
 
