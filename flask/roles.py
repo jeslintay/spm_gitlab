@@ -180,6 +180,35 @@ def view_applications(staff_id):
         ), 200
     except Exception as e:
         return jsonify({"error": str(e)}),500
+
+
+@app.route("/edit_role_listings/<int:listing_id>", methods=["PUT"])
+def edit_role_listing(listing_id):
+    data=request.get_json()
+    roleListing = Listing.query.get(listing_id)
+
+    if roleListing is None:
+        return jsonify({
+            "message": "Role listing not found."
+        }), 404
+
+    if 'role_name' in data:
+        roleListing.role_name = data['role_name']
+    if 'role_descr' in data:
+        roleListing.role_descr = data['role_descr']
+    if 'skills_required' in data:
+        roleListing.skills_required = data['skills_required']
+    if 'role_deadline' in data:
+        roleListing.role_deadline = data['role_deadline']
+
+    # Commit to DB
+    try:
+        db.session.commit()
+        return jsonify(roleListing.to_dict()), 201
+    except Exception:
+        return jsonify({
+            "message": "Unable to update role listing to database."
+        }), 500
     
 # holds values of selected roles    
 # @app.route("/role", methods=['POST'])
