@@ -64,7 +64,7 @@
         </nav>
     
         <!-- Table for listings -->
-    
+    <div id="app">
         <div id="main_container" class="container">
             <div class="d-flex">
                 <h1 class="display-4">Applicant's Profile</h1>
@@ -76,13 +76,19 @@
                     <thead class='thead-dark'>
                         <img src="staff.jpeg" class="rounded float-left" alt="Applicant's Profile Picture">
                         <tr>
-                            <th><a href="#">{staff_ID}</a></th>
-                            <th><a href="#">{staff_Fname}</a></th>
+                            <th> {{Staff_ID}}</th>
+                            <th> {{Staff_FName}}</th>
+                            <th> {{Staff_LName}}</th>
+                            <th> {{Dept}}</th>
+                            <th> {{Country}}</th>
+                            <th> {{Email}}</th>
+
+                            <!-- <th><a href="#">{{staff_Fname}}</a></th>
                             <th><a href="#">{staff_Lname}</a></th>
                             <th><a href="#">{Dept}</a></th>
                             <th><a href="#">{Country}</a></th>
                             <th><a href="#">{Email}</a></th>
-                            <th><a href="#">{Applicant's Skill(s)}</th>
+                            <th><a href="#">{Applicant's Skill(s)}</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -120,11 +126,47 @@
                     </tbody>
                 </table>
             </form>
-    
-    
+    </div>
+
+    <script>
+        var staff = localStorage['staff_to_view'];
+        console.log(staff)
+            const app = new Vue({
+                data(){
+                    return{
+                        Staff_ID:staff['Staff_ID'],
+                        Staff_FName:staff['Staff_FName'],
+                        Staff_LName:staff['Staff_LName'],
+                        Dept:staff['Dept'],
+                        Country:staff['Country'],
+                        Email:staff['Email'],
+                        // skill_name:
+
+                    }
+                },
+                mounted(){
+                    axios.get('http://localhost:5200/view_staffs/' + this.Staff_ID,)
+                    .then(response => {
+                        this.applicant = response.data.data;
+
+                        console.log(this.applicant)
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert(error);
+                    });
+                }
+
+            });
+            const vm = app.$mount('#app');
+
+
+    </script>
+
     
     </body>
+
     
     </html>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384" -->

@@ -60,6 +60,9 @@ class Applicants(db.Model):
     Staff_LName = db.Column(db.String(20),nullable=False)
     role_name = db.Column(db.String(20),nullable=False)
 
+    def json(self):
+        return {"app_ID":self.app_ID,"Staff_ID": self.Staff_ID, "Staff_FName": self.Staff_FName, "Staff_LName": self.Staff_LName,"role_name":self.role_name}
+
     def to_dict(self):
         """
         'to_dict' converts the object into a dictionary,
@@ -88,7 +91,23 @@ def view_role_listings():
         ), 200
     except Exception as e:
         return jsonify({"error": str(e)}),500
-    
+
+@app.route("/view_applicants/<string:role_name>")
+def view_applicants(role_name):
+    try:
+
+        # vrl_list = db.session.query(Listing).all()
+        app_list = db.session.execute(db.select(Applicants).filter_by(role_name=role_name)).scalars()
+
+        
+        return jsonify(
+            {
+                "data": [listing.to_dict()
+                        for listing in app_list]
+            }
+        ), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}),500    
 
 @app.route("/create_role_listing", methods=["POST"])
 def create_role_listing():
@@ -118,33 +137,6 @@ def create_role_listing():
         
     return jsonify(Listings), 201
 
-@app.route("/edit_role_listings/<int:listing_id>", methods=["PUT"])
-def edit_role_listing(listing_id):
-    data=request.get_json()
-    roleListing = Listing.query.get(listing_id)
-
-    if roleListing is None:
-        return jsonify({
-            "message": "Role listing not found."
-        }), 404
-
-    if 'role_name' in data:
-        roleListing.role_name = data['role_name']
-    if 'role_descr' in data:
-        roleListing.role_descr = data['role_descr']
-    if 'skills_required' in data:
-        roleListing.skills_required = data['skills_required']
-    if 'role_deadline' in data:
-        roleListing.role_deadline = data['role_deadline']
-
-    # Commit to DB
-    try:
-        db.session.commit()
-        return jsonify(roleListing.to_dict()), 201
-    except Exception:
-        return jsonify({
-            "message": "Unable to update role listing to database."
-        }), 500
 
 @app.route("/apply_role", methods=['POST'])
 def apply_role():
@@ -188,8 +180,7 @@ def view_applications(staff_id):
         ), 200
     except Exception as e:
         return jsonify({"error": str(e)}),500
-
-
+    
 # holds values of selected roles    
 # @app.route("/role", methods=['POST'])
 # def role():

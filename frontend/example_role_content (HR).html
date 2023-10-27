@@ -116,20 +116,29 @@
   
       <table id="applicantsTable" class='table table-borderless' border='1'>
         <thead class='thead-light'>
-          <tr >
+          <tr>
             <th>Applicants</th>
-            <th></th>
-            <th></th>
-            <!-- <th>Name</th>
-            <th>Department</th>
-            <th>Skills</th> -->
+          </tr>
+          <tr>
+            <th>Staff ID</th>
+            <th>Staff FName</th>
+            <th>Staff LName</th>
+            <th>Skills</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           <!-- need a v-for in this tr tag -->
-          <tr v-for="staffName" class="table-secondary">
+          <tr v-for="(applicant,idx) in applicants" class="table-secondary">
             <td>
-              <a href="#">{staff_name}</a>
+              <a href="view_staff_profile.html" @click="view_profileinfo(applicant)">{{applicant.Staff_ID}}</a>
+            </td>
+            <td>
+              <a href="#">{{applicant.Staff_FName}}</a>
+            </td>
+            <td>
+              <a href="#">{{applicant.Staff_LName}}</a>
+
             </td>
             <td>
               <!-- dropdown -->
@@ -144,7 +153,7 @@
             </td>
             <!-- when view match hit, tr.innerhtml += this newpart -->
           </tr>
-          <tr class="table-secondary"><td colspan="3">
+          <tr class="table-secondary"><td colspan="5">
             <div class="collapse" id="collapseExample">
               
               <strong>Staff Skills:</strong> {function to loop the skills}<br>
@@ -173,13 +182,31 @@
             role_name: myData["role_name"],
             role_descr: myData["role_descr"],
             skills_required: myData["skills_required"],
-            role_deadline: myData["role_deadline"]
+            role_deadline: myData["role_deadline"],
+            // staff_id: staff_id,
+            // staff_Fname: staff_Fname, 
+            // staff_Lname: staff_Lname,
+            applicants: []
             
         }
-      }
-    }).mount('#main_container')
-   
+      },
+      methods:{
+        view_profileinfo(record){
+          localStorage.setItem("staff_to_view", JSON.stringify(record));
+          
+        }
+      },mounted: function () {
+          axios.get("http://localhost:5000/view_applicants/" + this.role_name)
+          .then(response => {
+            this.applicants = response.data.data;
 
+            console.log(this.applicants);
+      })
+    }
+    }).mount('#main_container')
+
+
+    
   </script>
 
 
