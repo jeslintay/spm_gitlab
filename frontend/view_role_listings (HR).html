@@ -74,7 +74,7 @@
             </div>
         </div>
     </nav>
-
+    <div id="app">
     <!-- Table for listings -->
     <div id="main-container" class="container">
 
@@ -106,17 +106,18 @@
             </thead>
             <tbody id="body">
                 <tr v-for="record in filtered">
-                    <td id="testing"><a v-on:click="sendRole(record)" href="example_role_content (HR).html">{{record.role_name}}</a></td>
+                    <td id="testing"><a @click="sendRole(record)" href="example_role_content (HR).html">{{record.role_name}}</a></td>
                     <td>{{record.role_descr}}</td>
                     <td>{{record.skills_required}}</td>
                     <td>{{record.role_deadline}}</td>
-                    <td class="d-flex justify-content-center"><a href="edit_role_listing.html"><button class="btn btn-outline-primary" type="submit">Edit</button></a></td>
+                    <td class="d-flex justify-content-center"><a @click.prevent="editDetails(record)" href="edit_role_listing.html"><button class="btn btn-outline-primary" type="button">Edit</button></a></td>
                 </tr>
             </tbody>
         </table>
 
 
-        
+    </div>
+    </div>
 
         <script>
             const vm = new Vue({
@@ -134,8 +135,15 @@
                         //         this.record = response.data.data;
                         //     })
                         //     .catch(error => alert(error));
+
                         localStorage.setItem("role", JSON.stringify(record));
 
+                    },
+                    editDetails(record) {
+
+                        localStorage.setItem("role", JSON.stringify(record));
+                        window.location.href = "edit_role_listing.html";
+                        console.log("went to edit details");
                     },
                     showHint(){
                         console.log(this.input_title)
@@ -161,6 +169,7 @@
                     axios.get('http://localhost:5000/view_role_listings')
                         .then(response => {
                             this.roles = response.data.data;
+                            
                             this.roles.forEach(element => {
                                 element.role_deadline = new Date(element.role_deadline);
                                 // convert role_deadline to YYYY/MM/DD format
@@ -179,6 +188,7 @@
                                 const curreDate = new Date();
                                 this.filtered = this.filtered.filter(obj => new Date(obj.role_deadline) > curreDate);
                             });
+                            console.log(this.filtered)
                         })
                         .catch(error => alert(error));
                 }

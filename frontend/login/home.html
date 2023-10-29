@@ -67,9 +67,9 @@
                 this.error = '';
                 console.log(this.accessControlName)
                 if (this.accessControlName == 'HR') {
-                  window.location.replace("http://localhost/spm_gitlab/frontend/view_role_listings%20(HR).html");
+                  window.location.replace("../view_role_listings%20(HR).html");
                 } else if (this.accessControlName == 'User' || this.accessControlName == 'Admin' || this.accessControlName == 'Manager') {
-                  window.location.replace("http://localhost/spm_gitlab/frontend/view_role_listings%20(Staff).html");
+                  window.location.replace("../view_role_listings%20(Staff).html");
                 }
                 localStorage.setItem("staffID", this.staffId);
                 /// to get value -> var staffid = localStorage['staffID'];

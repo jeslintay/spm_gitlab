@@ -182,10 +182,12 @@ def view_applications(staff_id):
         return jsonify({"error": str(e)}),500
 
 
-@app.route("/edit_role_listings/<int:listing_id>", methods=["PUT"])
-def edit_role_listing(listing_id):
-    data=request.get_json()
-    roleListing = Listing.query.get(listing_id)
+@app.route("/edit_role_listings/<string:role_name>/<string:skills_required>", methods=["PUT"])
+def edit_role_listing(role_name, skills_required):
+    data = request.get_json()
+    
+    # Assuming you have a unique combination of role_name and skills_required in your database
+    roleListing = Listing.query.filter_by(role_name=role_name, skills_required=skills_required).first()
 
     if roleListing is None:
         return jsonify({
@@ -209,7 +211,7 @@ def edit_role_listing(listing_id):
         return jsonify({
             "message": "Unable to update role listing to database."
         }), 500
-    
+
 # holds values of selected roles    
 # @app.route("/role", methods=['POST'])
 # def role():
