@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from roles import app, Listing
+from roles import app, db, Listing
 
 
 class TestRoles(flask_testing.TestCase):
@@ -28,6 +28,14 @@ class TestCreateListing(TestRoles):
         request_body = {
             
         }
+    
+    def test_negative_duplicate_role_name(self):
+        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
+        l2 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
+
+    def test_negative_invalid_deadline(self):
+        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2022-12-31')
+        self.assertEqual(l1.role_deadline, '2022-12-31')
         
 
 if __name__ == '__main__': 

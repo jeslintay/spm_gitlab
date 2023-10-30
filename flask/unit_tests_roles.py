@@ -1,7 +1,7 @@
 import unittest
 
-from roles import Listing
-from login import Staff, Accesscontrol
+from roles import Listing, Applicants, Staff
+from login import Accesscontrol
 
 class TestListing(unittest.TestCase):
     def test_to_dict(self):
@@ -16,21 +16,23 @@ class TestListing(unittest.TestCase):
             }
         )
 
-'''
-    def test_create_role_listing(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
-        self.assertEqual(l1.role_deadline, '2024-12-31')
-
-    def test_negative_duplicate_role_name(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
-        l2 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
-
-    def test_negative_invalid_deadline(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2022-12-31')
-        self.assertEqual(l1.role_deadline, '2022-12-31')
-
-'''
-
+class TestApplicants(unittest.TestCase):
+    def test_to_dict(self):
+        a1 = Applicants(
+            Staff_ID=1,
+            Staff_FName='John',
+            Staff_LName='Doe',
+            role_name='Junior Engineer'
+        )
+        
+        self.assertEqual(a1.to_dict(),  
+            {
+            'Staff_ID': 1,
+            'Staff_FName': 'John',
+            'Staff_LName': 'Doe',
+            'role_name': 'Junior Engineer'
+            }
+        )
 
 
 class TestStaff(unittest.TestCase):
