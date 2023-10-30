@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from roles import app, db, Listing
+from roles import app, db, Listing, Applicants, Staff
 
 
 class TestRoles(flask_testing.TestCase):
@@ -36,7 +36,8 @@ class TestCreateListing(TestRoles):
     def test_negative_invalid_deadline(self):
         l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2022-12-31')
         self.assertEqual(l1.role_deadline, '2022-12-31')
-        
+
+
 
 if __name__ == '__main__': 
     unittest.main()
