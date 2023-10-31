@@ -39,7 +39,7 @@ class TestApplicants(unittest.TestCase):
 class TestStaff(unittest.TestCase):
     def test_to_dict(self):
         s1 = Staff(
-            Staff_ID=1,
+            Staff_ID=130002 ,
             Staff_FName='John',
             Staff_LName='Doe',
             Dept='IT',
@@ -47,9 +47,9 @@ class TestStaff(unittest.TestCase):
             Email='john@doe.com',
             Access_Right=1)
         
-        self.assertEqual(s1.to_dict(),  
+        self.assertEqual(s1.json(),  
             {
-            'Staff_ID': 0,
+            'Staff_ID': 130002,
             'Staff_FName': 'John',
             'Staff_LName': 'Doe',
             'Dept': 'IT',
@@ -66,7 +66,7 @@ class TestAccesscontrol(unittest.TestCase):
             Access_Control_Name='Tester'
         )
         
-        self.assertEqual(a1.to_dict(),  
+        self.assertEqual(a1.json(),  
             {
             'Access_ID': 99,
             'Access_Control_Name': 'Tester'
