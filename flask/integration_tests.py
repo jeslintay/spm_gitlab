@@ -26,7 +26,10 @@ class TestCreateListing(TestRoles):
         db.session.commit()
 
         request_body = {
-            
+            'role_name': 'Junior Engineer',
+            'role_descr': 'not senior engineer',
+            'skills_required': 'coding',
+
         }
     
     def test_negative_duplicate_role_name(self):
