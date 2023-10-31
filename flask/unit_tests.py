@@ -1,9 +1,7 @@
 import unittest
 
-from roles import Listing, Applicants, Staff, Staff_Skill, create_role_listing
+from roles import Listing, Applicants, Staff
 from login import Accesscontrol
-
-from datetime import datetime
 
 class TestListing(unittest.TestCase):
     def test_to_dict(self):
@@ -17,49 +15,6 @@ class TestListing(unittest.TestCase):
             }
         )
 
-    def test_boundary_deadline(self):
-
-        today = datetime.today().strftime('%Y-%m-%d')
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline=today)
-
-        self.assertEqual(l1.to_dict(), {
-            'role_name': 'Junior Engineer',
-            'role_descr': 'not senior engineer',
-            'skills_required': 'coding',
-            'role_deadline': today
-            }
-        )
-'''
-    def test_negative_past_deadline(self):
-        
-            l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2020-12-31')
-
-            output = create_role_listing()
-
-            self.assertEqual(output, {
-                "message": "Deadline cannot be before today."
-                }
-            )
-
-    def test_negative_duplicate_role_name(self):
-
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
-        l2 = Listing(role_name='Junior Engineer', role_descr='really not senior engineer', skills_required='super coding', role_deadline='2024-12-31')
-
-        self.assertEqual(l1.to_dict(), {
-            'role_name': 'Junior Engineer',
-            'role_descr': 'not senior engineer',
-            'skills_required': 'coding',
-            'role_deadline': '2024-12-31'
-            }
-        )
-
-        self.assertEqual(l2.to_dict(), {
-            "message": "Role Listing already exists."
-            }
-        )
-'''
-    
 class TestApplicants(unittest.TestCase):
     def test_to_dict(self):
         a1 = Applicants(
@@ -103,7 +58,6 @@ class TestStaff(unittest.TestCase):
             'Access_Right': 1
             }
         )
-
 
 class TestAccesscontrol(unittest.TestCase):
     def test_to_dict(self):

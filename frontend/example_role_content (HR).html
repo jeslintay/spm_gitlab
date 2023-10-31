@@ -131,7 +131,8 @@
           <!-- need a v-for in this tr tag -->
           <tr v-for="(applicant,idx) in applicants" class="table-secondary">
             <td>
-              <a href="view_staff_profile.html" @click="view_profileinfo(applicant)">{{applicant.Staff_ID}}</a>
+              <!-- <a href="#" click="view_profileinfo(applicant)">{{applicant.Staff_ID}}</a> -->
+              <a href="#" @click="view_profileinfo(applicant)">{{applicant.Staff_ID}}</a>
             </td>
             <td>
               <a href="#">{{applicant.Staff_FName}}</a>
@@ -186,25 +187,30 @@
             // staff_id: staff_id,
             // staff_Fname: staff_Fname, 
             // staff_Lname: staff_Lname,
-            applicants: []
-            
+            applicants: []            
         }
       },
       methods:{
-        view_profileinfo(record){
-          localStorage.setItem("staff_to_view", JSON.stringify(record));
-          
-        }
+        view_profileinfo(applicant){
+          console.log(applicant);
+          axios.get("http://localhost:5200/view_staffs/" + applicant.Staff_ID)
+          .then(response => {
+
+            applicant = response.data.data;
+            localStorage.setItem("applicant", JSON.stringify(applicant));
+            window.location.href = "view_staff_profile.html";
+          })
+      }
+
       },mounted: function () {
           axios.get("http://localhost:5000/view_applicants/" + this.role_name)
           .then(response => {
             this.applicants = response.data.data;
 
-            console.log(this.applicants);
-      })
+          })
     }
     }).mount('#main_container')
-
+    
 
     
   </script>

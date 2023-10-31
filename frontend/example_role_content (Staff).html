@@ -35,6 +35,12 @@
       display:block;
       border-top: 1px solid black;
     }
+
+    .btn:disabled{
+            background-color: gray;
+            border-color: black;
+            color: white;
+        }
         
   </style>
 </head>
@@ -105,6 +111,25 @@
       </tbody>
     </table>
 
+    <table class='table table-bordered'>
+      <thead class='thead-light'>
+          <tr>
+              <th>Type</th>
+              <th>Details</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td>Staff Skills</td>
+              <td>{{staffSkills.join(', ')}}</td>
+          </tr>
+          <tr>
+              <td>Skills Mismatch</td>
+              <td v-html="coloredSkills"></td>
+          </tr>
+      </tbody>
+  </table>
+
     <p>
       <a href="#"><button class="btn btn-primary"
         type="button" v-on:click="applyRole(role_name)" :disabled="appliedRoles.includes(role_name)">Apply</button></a>
@@ -112,13 +137,18 @@
     </p>
     </div>
 
-
+    <div>
+      <!--help me input a text disclaimer to prompt the user that red = mismatch and green = matched-->
+      <p id="line"></p>
+      <p>Legend:</p>
+      <p>Skills Mismatch: <span style="color: red;">Red Color</span></p>
+      <p>Skills Matched: <span style="color: green;">Green Color</span></p>
+    </div>
+  
 
     
     <script>
       var myData = JSON.parse(localStorage['role']);
-      // localStorage.removeItem('role');
-      // myData = JSON.parse(myData);
       console.log(myData);
       
     </script>
@@ -132,6 +162,9 @@
               role_descr: myData["role_descr"],
               skills_required: myData["skills_required"],
               role_deadline: myData["role_deadline"],
+              staffSkills: [],
+              coloredSkillsData: "",
+              coloredSkillsArray:[],
               appliedRoles: [],
               record : {role_name:myData["role_name"], staff_id:localStorage['staffID']},
               applicants: [],
@@ -154,8 +187,27 @@
                         alert("Successfully applied for " + this.newRecord.role_name)
                     })
                     .catch(error => alert(error));
-            }
-        }, mounted() {
+            },
+            compareSkills() {
+            let skills = this.skills_required.split(",");
+            this.coloredSkillsArray = skills.map(skill => {
+                skill = skill.trim();
+                if (this.staffSkills.includes(skill)) {
+                    return '<span style="color: green;">' + skill + '</span>';
+                } else {
+                    return '<span style="color: red;">' + skill + '</span>';
+                }
+            });
+            this.coloredSkillsData = this.coloredSkillsArray.join(", "); 
+            // This will store the processed string version of the colored skills.
+        }
+
+        },computed: {
+        coloredSkills() {
+            return this.coloredSkillsData || this.skills_required; 
+            // If coloredSkillsData is empty (e.g., before Axios call), show the original skills_required
+        }
+        },mounted() {
           // this.staffID = localStorage['staffID'];
 
           axios.get('http://localhost:5000/view_applications/' + this.staffID)
@@ -171,6 +223,26 @@
                 
             })
             .catch(error => alert(error));
+
+          // Retrieve the staff ID from the URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const staffID = urlParams.get('staff_id');
+    
+          if (staffID) {
+            // Make an Axios call to fetch staff skills
+            axios.get("http://localhost:5000/get_staff_skills/" + staffID)
+              .then(response => {
+                console.log(response)
+                this.staffSkills = response.data.skills;
+                // Call a function to compare and set text colors
+                this.compareSkills();
+              })
+              .catch(error => {
+                console.error('Error fetching staff skills:', error);
+              });
+          } else {
+            console.log("Staff ID not found in the URL.");
+          }
 
         }
       }).mount('#main_container');
