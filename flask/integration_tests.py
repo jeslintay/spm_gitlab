@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-from roles import app, db, Listing, Applicants, Staff
+from roles import app, db, Listing, Applicants, Staff, Staff_Skill
 
 
 class TestRoles(flask_testing.TestCase):
@@ -19,27 +19,28 @@ class TestRoles(flask_testing.TestCase):
         db.session.remove()
         db.drop_all()
 
-class TestCreateListing(TestRoles):
-    def test_create_listing(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
-        db.session.add(l1)
+class TestGetSkills(TestRoles):
+    def test_get_skills(self):
+        s1 = Staff(
+            Staff_ID=130002 ,
+            Staff_FName='John',
+            Staff_LName='Doe',
+            Dept='IT',
+            Country='Singapore',
+        )
+        sk1 = Staff_Skill(
+            Staff_ID=130002,
+            Skill_Name='Python',
+        )
+        db.session.add(s1)
         db.session.commit()
 
         request_body = {
-            'role_name': 'Junior Engineer',
-            'role_descr': 'not senior engineer',
-            'skills_required': 'coding',
+            
 
         }
     
-    def test_negative_duplicate_role_name(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
-        l2 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
-
-    def test_negative_invalid_deadline(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2022-12-31')
-        self.assertEqual(l1.role_deadline, '2022-12-31')
-
+    
 
 
 if __name__ == '__main__': 

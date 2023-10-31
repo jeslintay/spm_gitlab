@@ -227,6 +227,8 @@ def get_staff_skills(staff_id):
         return jsonify({"skills": skill_names}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
 
 # holds values of selected roles    
 # @app.route("/role", methods=['POST'])

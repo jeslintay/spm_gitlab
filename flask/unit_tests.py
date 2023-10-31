@@ -1,6 +1,6 @@
 import unittest
 
-from roles import Listing, Applicants, Staff
+from roles import Listing, Applicants, Staff, Staff_Skill
 from login import Accesscontrol
 
 class TestListing(unittest.TestCase):
@@ -15,6 +15,7 @@ class TestListing(unittest.TestCase):
             }
         )
 
+    
 class TestApplicants(unittest.TestCase):
     def test_to_dict(self):
         a1 = Applicants(
@@ -56,6 +57,20 @@ class TestStaff(unittest.TestCase):
             'Country': 'Singapore',
             'Email': 'john@doe.com',
             'Access_Right': 1
+            }
+        )
+
+class TestStaff_Skill(unittest.TestCase):
+    def test_to_dict(self):
+        sk1 = Staff_Skill(
+            Staff_ID=130002,
+            Skill_Name='Python',
+        )
+        
+        self.assertEqual(sk1.json(),  
+            {
+            'Staff_ID': 130002,
+            'Skill_Name': 'Python'
             }
         )
 
