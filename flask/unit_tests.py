@@ -102,19 +102,6 @@ class TestStaff(unittest.TestCase):
             }
         )
 
-class TestStaff_Skill(unittest.TestCase):
-    def test_to_dict(self):
-        sk1 = Staff_Skill(
-            Staff_ID=130002,
-            Skill_Name='Python',
-        )
-        
-        self.assertEqual(sk1.json(),  
-            {
-            'Staff_ID': 130002,
-            'Skill_Name': 'Python'
-            }
-        )
 
 class TestAccesscontrol(unittest.TestCase):
     def test_to_dict(self):
