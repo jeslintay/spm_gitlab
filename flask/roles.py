@@ -218,22 +218,14 @@ def edit_role_listing(role_name, skills_required):
         return jsonify({
             "message": "Role listing not found."
         }), 404
-
-    if 'role_name' in data:
-        roleListing.role_name = data['role_name']
-    if 'role_descr' in data:
-        roleListing.role_descr = data['role_descr']
-    if 'skills_required' in data:
-        roleListing.skills_required = data['skills_required']
-    if 'role_deadline' in data:
-        roleListing.role_deadline = data['role_deadline']
-
-    roleListing2 = Listing.query.filter_by(role_name=data['role_name']).first()
-    if roleListing2 is not None:
-        return jsonify({
-            "message": "Role Listing already exists."
-        }), 500
     
+    if (roleListing.role_name != data['role_name']):
+        roleListing2 = Listing.query.filter_by(role_name=data['role_name']).first()
+        if roleListing2 is not None:
+            return jsonify({
+                "message": "Role Listing already exists."
+            }), 500
+        
     if data['role_deadline'] == None or data['role_descr'] == "" or data['skills_required'] == "" or data['role_name'] == "":
         return jsonify({
             "message": "Input cannot be empty."
@@ -244,6 +236,16 @@ def edit_role_listing(role_name, skills_required):
         return jsonify({
             "message": "Deadline cannot be before today."
         }), 500
+
+    if 'role_name' in data:
+        roleListing.role_name = data['role_name']
+    if 'role_descr' in data:
+        roleListing.role_descr = data['role_descr']
+    if 'skills_required' in data:
+        roleListing.skills_required = data['skills_required']
+    if 'role_deadline' in data:
+        roleListing.role_deadline = data['role_deadline']
+
     
 
     # Commit to DB

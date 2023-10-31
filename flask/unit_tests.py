@@ -3,6 +3,8 @@ import unittest
 from roles import Listing, Applicants, Staff, Staff_Skill
 from login import Accesscontrol
 
+from datetime import datetime
+
 class TestListing(unittest.TestCase):
     def test_to_dict(self):
         l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
@@ -15,7 +17,20 @@ class TestListing(unittest.TestCase):
             }
         )
 
-    def test_negative_deadline(self):
+    def test_boundary_deadline(self):
+        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
+
+        today = datetime.today().strftime('%Y-%m-%d')
+
+        self.assertEqual(l1.to_dict(), {
+            'role_name': 'Junior Engineer',
+            'role_descr': 'not senior engineer',
+            'skills_required': 'coding',
+            'role_deadline': today
+            }
+        )
+
+    def test_negative_past_deadline(self):
         
             l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2020-12-31')
 
