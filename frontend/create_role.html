@@ -111,7 +111,7 @@
                     role_name: "",
                     role_descr: "",
                     skills_required: "",
-                    role_deadline: Date(),
+                    role_deadline: null,
                 },
                 methods: {
                     saveNewrole: function () {
@@ -126,7 +126,9 @@
                                 window.location.replace("view_role_listings (HR).html");
                                 return false;
                             })
-                            .catch(error => { this.error = error.response.data.message });
+                            .catch(error => { this.error = error.response.data.message
+                                alert(this.error)
+                            });
                     }
                 },
                 // mounted: function () {
