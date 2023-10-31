@@ -6,7 +6,7 @@ from roles import app, db, Listing, Applicants, Staff, Staff_Skill
 
 class TestRoles(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://' + \
-                                        'root:root' + \
+                                        'root:' + \
                                         '@localhost:3306/sbrp'
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
                                             'pool_recycle': 280}
@@ -42,7 +42,7 @@ class TestApplyRole(TestRoles):
 
         response = self.client.post("/apply_role", data=json.dumps(request_body))
         self.assertEqual(response.json, {
-            #"app_ID": 1, # autoincrement
+            "app_ID": 1, # autoincrement
             "Staff_ID": 130002,
             "Staff_FName": "John",
             "Staff_LName": "Doe",
