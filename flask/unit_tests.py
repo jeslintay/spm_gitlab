@@ -45,7 +45,7 @@ class TestStaff(unittest.TestCase):
             Dept='IT',
             Country='Singapore',
             Email='john@doe.com',
-            AccessRights=1)
+            Access_Right=1)
         
         self.assertEqual(s1.to_dict(),  
             {
@@ -55,7 +55,7 @@ class TestStaff(unittest.TestCase):
             'Dept': 'IT',
             'Country': 'Singapore',
             'Email': 'john@doe.com',
-            'AccessRights': 1
+            'Access_Right': 1
             }
         )
 
