@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -124,6 +125,24 @@ def create_role_listing():
             "message": "Incorrect JSON object provided."
         }),500
     
+    roleListing = Listing.query.filter_by(role_name=data['role_name']).first()
+    if roleListing is not None:
+        return jsonify({
+            "message": "Role Listing already exists."
+        }), 500
+    
+    if data['role_deadline'] == None or data['role_descr'] == "" or data['skills_required'] == "" or data['role_name'] == "":
+        return jsonify({
+            "message": "Input cannot be empty."
+        }), 500
+    
+    today = datetime.today().strftime('%Y-%m-%d')
+    if data['role_deadline'] < today:
+        return jsonify({
+            "message": "Deadline cannot be before today."
+        }), 500
+    
+    
     Listings = []
     for skill in data['skills_required']:
         print(skill)
@@ -131,6 +150,7 @@ def create_role_listing():
             role_name=data['role_name'], role_descr=data['role_descr'],
             skills_required=skill, role_deadline= data['role_deadline'])
         Listings.append(roleListing.to_dict())
+
     # Commit to DB
         try:
             db.session.add(roleListing)
