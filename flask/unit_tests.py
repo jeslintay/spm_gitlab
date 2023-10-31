@@ -18,9 +18,9 @@ class TestListing(unittest.TestCase):
         )
 
     def test_boundary_deadline(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
 
         today = datetime.today().strftime('%Y-%m-%d')
+        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline=today)
 
         self.assertEqual(l1.to_dict(), {
             'role_name': 'Junior Engineer',
