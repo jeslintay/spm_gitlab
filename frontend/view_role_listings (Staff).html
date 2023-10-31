@@ -28,6 +28,13 @@
         a:hover {
             color: gold
         }
+
+        .btn:disabled {
+            background-color: gray;
+            border-color: black;
+            color: white;
+        }
+
     </style>
 </head>
 
@@ -74,7 +81,7 @@
             </div>
         </div>
     </nav>
-
+    <div id="app">
     <!-- Table for listings -->
     <div id="main-container" class="container">
 
@@ -110,15 +117,18 @@
             </thead>
             <tbody id="body">
                 <tr v-for="record in filtered">
-                    <td id="testing"><a v-on:click="sendRole(record)" v-bind:href="'example_role_content (Staff).html?staff_id=' + staffID">{{record.role_name}}</a></td>
+                    <td id="testing"><a v-on:click="sendRole(record)"
+                            href="example_role_content (Staff).html">{{record.role_name}}</a></td>
                     <td>{{record.role_descr}}</td>
                     <td>{{record.skills_required}}</td>
                     <td>{{record.role_deadline}}</td>
-                    <td class="d-flex justify-content-center"><a href="#"><button class="btn btn-outline-primary"
+                    <td class="d-flex justify-content-center"><a href="#"><button class="btn btn-primary"
                                 type="button" v-on:click="applyRole(record)" :disabled="appliedRoles.includes(record.role_name)">Apply</button></a></td>
                 </tr>
             </tbody>
         </table>
+    </div>
+    </div>
 
 
         <script>
@@ -162,7 +172,6 @@
                         .catch(error => alert(error));
                     },
                     applyRole(record) {
-
                         this.appliedRoles.push(record.role_name)
 
                         axios.post('http://localhost:5000/apply_role', {
@@ -171,6 +180,7 @@
                             })
                             .then(response => {
                                 this.record = response.data.data;
+                                alert("Successfully applied for " + record.role_name)
                             })
                             .catch(error => alert(error));
                     }
@@ -205,12 +215,20 @@
                         .then(response => {
                             this.applicants = response.data.data;   
                             console.log(this.applicants)
-                            this.applicants.forEach(element => {
-                                if (element.role_name == record.role_name) {
-                                    this.appliedRoles.push(record.role_name);
+                            // this.applicants.forEach(element => {
+                            //     if (element.role_name == record.role_name) {
+                            //         this.appliedRoles.push(record.role_name);
 
+                            //     }
+                            // });
+                            this.applicants.forEach(applicant => {
+                            this.filtered.forEach(record => {
+                                if (applicant.role_name == record.role_name) {
+                                    this.appliedRoles.push(record.role_name);
                                 }
                             });
+                        });
+
                         })
                         .catch(error => alert(error));
                 }

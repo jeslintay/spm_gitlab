@@ -105,72 +105,75 @@
       </tbody>
     </table>
 
-    <div id="staffSkillsContainer">
-      Staff Skills: <span id="staffSkills"></span>
-    </div>
-
-    <td v-html="skills_required.join(', ')"></td>
-
     <p>
-      <a href="#"><button class="btn btn-outline-primary" type="button">Apply</button></a>  
+      <a href="#"><button class="btn btn-primary"
+        type="button" v-on:click="applyRole(role_name)" :disabled="appliedRoles.includes(role_name)">Apply</button></a>
+
     </p>
+    </div>
 
 
 
     
     <script>
-      var myData = localStorage['role'];
-      localStorage.removeItem('role');
-      myData = JSON.parse(myData);
+      var myData = JSON.parse(localStorage['role']);
+      // localStorage.removeItem('role');
+      // myData = JSON.parse(myData);
       console.log(myData);
-      console.log(typeof(myData));
-  
+      
+    </script>
+    <script>
       const main_container = Vue.createApp({
       data() {
           return {
+              // myData: JSON.parse(localStorage['role']),
+
               role_name: myData["role_name"],
               role_descr: myData["role_descr"],
               skills_required: myData["skills_required"],
-              role_deadline: myData["role_deadline"]
+              role_deadline: myData["role_deadline"],
+              appliedRoles: [],
+              record : {role_name:myData["role_name"], staff_id:localStorage['staffID']},
+              applicants: [],
+              newRecord:{},
+              staffID: localStorage['staffID']
               
           }
         },
-        mounted() {
-          // Retrieve the staff ID from the URL
-          const urlParams = new URLSearchParams(window.location.search);
-          const staffID = urlParams.get('staff_id');
-    
-          if (staffID) {
-            // Make an Axios call to fetch staff skills
-            axios.get(`/get_staff_skills/${staffID}`)
-              .then(response => {
-                this.staffSkills = response.data.skills;
-                // Call a function to compare and set text colors
-                this.compareSkills();
-              })
-              .catch(error => {
-                console.error('Error fetching staff skills:', error);
-              });
-          } else {
-            console.log("Staff ID not found in the URL.");
-          }
-        },
-        methods: {
-          compareSkills() {
-            // Loop through the required skills
-            for (let i = 0; i < this.skills_required.length; i++) {
-              const skill = this.skills_required[i];
-              if (this.staffSkills.includes(skill)) {
-                // Skill is in both staff and required skills, set it to green
-                this.skills_required[i] = '<span style="color: green;">' + skill + '</span>';
-              } else {
-                // Skill is required but not in staff skills, set it to red
-                this.skills_required[i] = '<span style="color: red;">' + skill + '</span>';
-              }
+        methods:{
+          applyRole(test_name) {
+                this.appliedRoles.push(test_name)
+
+                axios.post('http://localhost:5000/apply_role', {
+                        staff_id: this.staffID,
+                        role_name: this.role_name
+                    })
+                    .then(response => {
+                        this.newRecord = response.data;
+                        console.log(this.newRecord)
+                        alert("Successfully applied for " + this.newRecord.role_name)
+                    })
+                    .catch(error => alert(error));
             }
-          }
-        },
-      }).mount('#main_container')
+        }, mounted() {
+          // this.staffID = localStorage['staffID'];
+
+          axios.get('http://localhost:5000/view_applications/' + this.staffID)
+            .then(response => {
+                this.applicants = response.data.data;   
+                console.log(this.applicants)
+                this.applicants.forEach(element => {
+                    if (element.role_name == this.newRecord.role_name) {
+                        this.appliedRoles.push(this.newRecord.role_name);
+
+                    }
+                });
+                
+            })
+            .catch(error => alert(error));
+
+        }
+      }).mount('#main_container');
      
   
     </script>
