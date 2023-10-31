@@ -18,6 +18,7 @@ class TestListing(unittest.TestCase):
 class TestApplicants(unittest.TestCase):
     def test_to_dict(self):
         a1 = Applicants(
+            app_ID=1,
             Staff_ID=1,
             Staff_FName='John',
             Staff_LName='Doe',
@@ -26,6 +27,7 @@ class TestApplicants(unittest.TestCase):
         
         self.assertEqual(a1.to_dict(),  
             {
+            'app_ID': 1,
             'Staff_ID': 1,
             'Staff_FName': 'John',
             'Staff_LName': 'Doe',
