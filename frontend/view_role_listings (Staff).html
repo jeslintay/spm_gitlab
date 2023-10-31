@@ -110,8 +110,7 @@
             </thead>
             <tbody id="body">
                 <tr v-for="record in filtered">
-                    <td id="testing"><a v-on:click="sendRole(record)"
-                            href="example_role_content (Staff).html">{{record.role_name}}</a></td>
+                    <td id="testing"><a v-on:click="sendRole(record)" v-bind:href="'example_role_content (Staff).html?staff_id=' + staffID">{{record.role_name}}</a></td>
                     <td>{{record.role_descr}}</td>
                     <td>{{record.skills_required}}</td>
                     <td>{{record.role_deadline}}</td>

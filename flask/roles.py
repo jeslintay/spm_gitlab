@@ -52,6 +52,11 @@ class Staff(db.Model):
     def json(self):
         return {"Staff_ID": self.Staff_ID, "Staff_FName": self.Staff_FName, "Staff_LName": self.Staff_LName, "Dept": self.Dept,"Country": self.Country,"Email": self.Email,"Access_Right": self.Access_Right}
 
+class Staff_Skill(db.Model):
+    __tablename__ = 'Staff_Skill'  
+    Staff_ID = db.Column(db.Integer, primary_key=True)
+    Skill_Name = db.Column(db.String(50), primary_key=True)
+
 class Applicants(db.Model):
     __tablename__ = 'applicants'
     app_ID = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -211,6 +216,17 @@ def edit_role_listing(role_name, skills_required):
         return jsonify({
             "message": "Unable to update role listing to database."
         }), 500
+
+@app.route('/get_staff_skills/<int:staff_id>')
+def get_staff_skills(staff_id):
+    try:
+        # Query the Staff_Skill table to retrieve skills for the specified Staff_ID
+        staff_skills = db.session.query(Staff_Skill.Skill_Name).filter(Staff_Skill.Staff_ID == staff_id).all()
+        skill_names = [skill[0] for skill in staff_skills]
+
+        return jsonify({"skills": skill_names}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # holds values of selected roles    
 # @app.route("/role", methods=['POST'])

@@ -105,6 +105,12 @@
       </tbody>
     </table>
 
+    <div id="staffSkillsContainer">
+      Staff Skills: <span id="staffSkills"></span>
+    </div>
+
+    <td v-html="skills_required.join(', ')"></td>
+
     <p>
       <a href="#"><button class="btn btn-outline-primary" type="button">Apply</button></a>  
     </p>
@@ -128,7 +134,42 @@
               role_deadline: myData["role_deadline"]
               
           }
-        }
+        },
+        mounted() {
+          // Retrieve the staff ID from the URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const staffID = urlParams.get('staff_id');
+    
+          if (staffID) {
+            // Make an Axios call to fetch staff skills
+            axios.get(`/get_staff_skills/${staffID}`)
+              .then(response => {
+                this.staffSkills = response.data.skills;
+                // Call a function to compare and set text colors
+                this.compareSkills();
+              })
+              .catch(error => {
+                console.error('Error fetching staff skills:', error);
+              });
+          } else {
+            console.log("Staff ID not found in the URL.");
+          }
+        },
+        methods: {
+          compareSkills() {
+            // Loop through the required skills
+            for (let i = 0; i < this.skills_required.length; i++) {
+              const skill = this.skills_required[i];
+              if (this.staffSkills.includes(skill)) {
+                // Skill is in both staff and required skills, set it to green
+                this.skills_required[i] = '<span style="color: green;">' + skill + '</span>';
+              } else {
+                // Skill is required but not in staff skills, set it to red
+                this.skills_required[i] = '<span style="color: red;">' + skill + '</span>';
+              }
+            }
+          }
+        },
       }).mount('#main_container')
      
   
