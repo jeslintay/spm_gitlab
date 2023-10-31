@@ -228,6 +228,24 @@ def edit_role_listing(role_name, skills_required):
     if 'role_deadline' in data:
         roleListing.role_deadline = data['role_deadline']
 
+    roleListing2 = Listing.query.filter_by(role_name=data['role_name']).first()
+    if roleListing2 is not None:
+        return jsonify({
+            "message": "Role Listing already exists."
+        }), 500
+    
+    if data['role_deadline'] == None or data['role_descr'] == "" or data['skills_required'] == "" or data['role_name'] == "":
+        return jsonify({
+            "message": "Input cannot be empty."
+        }), 500
+    
+    today = datetime.today().strftime('%Y-%m-%d')
+    if data['role_deadline'] < today:
+        return jsonify({
+            "message": "Deadline cannot be before today."
+        }), 500
+    
+
     # Commit to DB
     try:
         db.session.commit()
