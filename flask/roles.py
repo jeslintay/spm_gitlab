@@ -125,6 +125,28 @@ def create_role_listing():
             "message": "Incorrect JSON object provided."
         }),500
     
+    if validate_role_listing(data) == 200:
+        Listings = []
+        for skill in data['skills_required']:
+            print(skill)
+            roleListing=Listing(
+                role_name=data['role_name'], role_descr=data['role_descr'],
+                skills_required=skill, role_deadline= data['role_deadline'])
+            Listings.append(roleListing.to_dict())
+
+    # Commit to DB
+        try:
+            db.session.add(roleListing)
+            db.session.commit()
+        except Exception:
+            return jsonify({
+                "message": "Unable to commit to database."
+            }), 500
+        
+    return jsonify(Listings), 201
+
+def validate_role_listing(data):
+
     roleListing = Listing.query.filter_by(role_name=data['role_name']).first()
     if roleListing is not None:
         return jsonify({
@@ -142,25 +164,9 @@ def create_role_listing():
             "message": "Deadline cannot be before today."
         }), 500
     
-    
-    Listings = []
-    for skill in data['skills_required']:
-        print(skill)
-        roleListing=Listing(
-            role_name=data['role_name'], role_descr=data['role_descr'],
-            skills_required=skill, role_deadline= data['role_deadline'])
-        Listings.append(roleListing.to_dict())
-
-    # Commit to DB
-        try:
-            db.session.add(roleListing)
-            db.session.commit()
-        except Exception:
-            return jsonify({
-                "message": "Unable to commit to database."
-            }), 500
-        
-    return jsonify(Listings), 201
+    return jsonify({
+        "message": "OK"
+    }), 200
 
 
 @app.route("/apply_role", methods=['POST'])

@@ -1,6 +1,6 @@
 import unittest
 
-from roles import Listing, Applicants, Staff, Staff_Skill, create_role_listing
+from roles import Listing, Applicants, Staff, Staff_Skill, validate_role_listing
 from login import Accesscontrol
 
 from datetime import datetime
@@ -29,12 +29,15 @@ class TestListing(unittest.TestCase):
             'role_deadline': today
             }
         )
-'''
-    def test_negative_past_deadline(self):
+
+    def test_validate_role_listing(self):
         
             l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2020-12-31')
 
-            output = create_role_listing()
+            try:
+                l1.validate_role_listing()
+
+            output = validate_role_listing()
 
             self.assertEqual(output, {
                 "message": "Deadline cannot be before today."
@@ -58,7 +61,7 @@ class TestListing(unittest.TestCase):
             "message": "Role Listing already exists."
             }
         )
-'''
+
     
 class TestApplicants(unittest.TestCase):
     def test_to_dict(self):
