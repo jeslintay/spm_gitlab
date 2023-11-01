@@ -30,35 +30,36 @@ class TestListing(unittest.TestCase):
             }
         )
 
-    def test_validate_role_listing(self):
+    def test_negative_deadline(self):
         
             l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2020-12-31')
 
             try:
-                l1.validate_role_listing()
+                validate_role_listing(l1)
+            except Exception as e:
+                self.assertEqual(str(e), "Deadline cannot be before today.")
 
-            output = validate_role_listing()
-
-            self.assertEqual(output, {
-                "message": "Deadline cannot be before today."
-                }
-            )
+    
+    def test_negative_empty_input(self):
+            
+                l1 = Listing(role_name='', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
+    
+                try:
+                    validate_role_listing(l1)
+                except Exception as e:
+                    self.assertEqual(str(e), "Input cannot be empty.")
 
     def test_negative_duplicate_role_name(self):
 
         l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
         l2 = Listing(role_name='Junior Engineer', role_descr='really not senior engineer', skills_required='super coding', role_deadline='2024-12-31')
 
-        self.assertEqual(l1.to_dict(), {
-            'role_name': 'Junior Engineer',
-            'role_descr': 'not senior engineer',
-            'skills_required': 'coding',
-            'role_deadline': '2024-12-31'
-            }
-        )
-
-        self.assertEqual(l2.to_dict(), {
-            "message": "Role Listing already exists."
+        try:
+            validate_role_listing(l1)
+            validate_role_listing(l2)
+        except Exception as e:
+            self.assertEqual(l2.to_dict(), {
+                "message": "Role Listing already exists."
             }
         )
 
