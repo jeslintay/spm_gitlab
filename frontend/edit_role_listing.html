@@ -10,15 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
-    <!-- 
-    Edit page for all roles will lead to this html, 
-    but probably each edit button of a role (in view_role_listing.html), will contain the role_id in the href link, that is sent to this html page as well. 
-    This page can then send the role_id, as well as the new details, to the database to update the role.
-
-    If anyone has any better ideas, pls feel free to change it/ tell me
-    I'm not sure what to do without the database
-    -->
-
     <title>Edit Role</title>
     <style>
         a {
@@ -46,32 +37,13 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <!-- home -->
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Home</a>
-                    </li>
-
                     <!-- List of Available Roles -->
                     <li class="nav-item">
                         <a class="nav-link" href="view_role_listings.html">List of Available Roles</a>
                     </li>
                 </ul>
 
-                <!-- Profile -->
-                <div class="nav-item dropdown d-flex me-2">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown">
-                        Profile
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Skills Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Logout</a></li>
-                    </ul>
-                </div>
+
             </div>
         </div>
     </nav>
@@ -123,13 +95,7 @@
 
     <script>
         var role = JSON.parse(localStorage['role']);
-        // var role_id = role['role_id'];
-        // var role_name = role['role_name'];
-        // var role_descr = role['role_descr'];
-        // var skills_required = role['skills_required'];
-        // var role_deadline = role['role_deadline'];
 
-        
         const app = new Vue({
             data(){
                 return{

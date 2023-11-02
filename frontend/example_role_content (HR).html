@@ -52,10 +52,6 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-          <!-- home -->
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Home</a>
-          </li>
 
           <!-- List of Available Roles -->
           <li class="nav-item">
@@ -63,20 +59,6 @@
           </li>
         </ul>
 
-        <!-- Profile -->
-        <div class="nav-item dropdown d-flex me-2">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-            Profile
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#">Skills Profile</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
-          </ul>
-        </div>
       </div>
     </div>
   </nav>
@@ -168,7 +150,6 @@
       </table>
 
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script> -->
   </div>
   <script>
     var myData = localStorage['role'];
@@ -184,9 +165,7 @@
             role_descr: myData["role_descr"],
             skills_required: myData["skills_required"],
             role_deadline: myData["role_deadline"],
-            // staff_id: staff_id,
-            // staff_Fname: staff_Fname, 
-            // staff_Lname: staff_Lname,
+
             applicants: []            
         }
       },
@@ -215,43 +194,6 @@
     
   </script>
 
-
-
-
-  <!-- <script>
-    var myData = localStorage['objectToPass'];//is an object
-    localStorage.removeItem('objectToPass');
-    console.log(myData);
-
-    const vm = new Vue({
-      el: '#main-container',
-      data: {
-        roles: []
-      },
-      methods: {
-        // sendRole(record) {
-        //     // axios.post('http://localhost:5000/role', {record})
-        //     //     .then(response => {
-        //     //         this.record = response.data.data;
-        //     //     })
-        //     //     .catch(error => alert(error));
-
-        //     var roleData=record;
-        //     localStorage.setItem("objectToPass", roleData);
-
-
-        // }
-      },
-      mounted: function () {
-        axios.get('http://localhost:5000/view_role_listings')
-          .then(response => {
-            this.roles = response.data.data;
-          })
-          .catch(error => alert(error));
-      }
-    });
-
-  </script> -->
 </body>
 
 </html>
