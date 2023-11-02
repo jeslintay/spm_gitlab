@@ -133,6 +133,7 @@ def create_role_listing():
                 role_name=data['role_name'], role_descr=data['role_descr'],
                 skills_required=skill, role_deadline= data['role_deadline'])
             Listings.append(roleListing.to_dict())
+    
 
     # Commit to DB
         try:
@@ -143,7 +144,10 @@ def create_role_listing():
                 "message": "Unable to commit to database."
             }), 500
         
-    return jsonify(Listings), 201
+        return jsonify(Listings), 201
+    
+    else:
+        return validate_role_listing(data)
 
 def validate_role_listing(data):
 
