@@ -25,28 +25,51 @@ class TestRoles(flask_testing.TestCase):
         db.session.remove()
         db.drop_all()
 
-class TestCreateListing(TestRoles):
-    def test_create_listing(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
+class TestRoles(flask_testing.TestCase):
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://' + \
+                                        'root:' + \
+                                        '@localhost:3306/sbrp'
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
+                                            'pool_recycle': 280}
+    app.config['TESTING'] = True
+
+    def create_app(self):
+        return app
+
+    def setUp(self):
+        db.create_all()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+
+class TestApplyRole(TestRoles):
+    def test_apply_role(self):
+
+        s1 = Staff(Staff_ID=130002, Staff_FName='John', Staff_LName='Doe', Dept='IT', Country='Singapore', Email='john@it.com', Access_Right=1)
+
+        l1 = Listing(role_name='Tester', role_descr='Test software', skills_required='Python', role_deadline='2024-12-31')
+
+        db.session.add(s1)
         db.session.add(l1)
         db.session.commit()
 
         request_body = {
-            'role_name': 'Junior Engineer',
-            'role_descr': 'not senior engineer',
-            'skills_required': 'coding',
-
+            "Staff_ID": 130002,
+            "Staff_FName": "John",
+            "Staff_LName": "Doe",
+            "role_name": "Tester"
         }
-    
-    def test_negative_duplicate_role_name(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
-        l2 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2024-12-31')
 
-    def test_negative_invalid_deadline(self):
-        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2022-12-31')
-        self.assertEqual(l1.role_deadline, '2022-12-31')
+        response = self.client.post("/apply_role", data=json.dumps(request_body))
+        self.assertEqual(response.json, {
+            "app_ID": 1, # autoincrement
+            "Staff_ID": 130002,
+            "Staff_FName": "John",
+            "Staff_LName": "Doe",
+            "role_name": "Tester"})
 
 
 
-if __name__ == '__main__': 
-    unittest.main()
+#if __name__ == '__main__': 
+  #  unittest.main()
