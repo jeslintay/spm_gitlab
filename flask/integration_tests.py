@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import flask_testing
 import json
-from roles import app, db, Listing, Applicants, Staff, validate_role_listing
+from roles import db, Listing, Applicants, Staff, validate_role_listing
 from login import Accesscontrol
 from datetime import datetime
 
