@@ -11,13 +11,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://' + \
                                         '@localhost:3306/sbrp'
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
                                             'pool_recycle': 280}
+
+
 # else:
 #     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
+db.init_app(app)
 CORS(app)
 
 class Listing(db.Model):
