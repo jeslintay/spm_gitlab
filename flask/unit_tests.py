@@ -1,7 +1,11 @@
 import unittest
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+import flask_testing
+import json
+from roles import app, db, Listing, Applicants, Staff
 from datetime import datetime
-from roles import Listing, Applicants, Staff, Staff_Skill, validate_role_listing
-from login import Accesscontrol
 
 
 class TestListing(unittest.TestCase):
@@ -35,11 +39,13 @@ class TestListing(unittest.TestCase):
     def test_negative_deadline(self):
         l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2020-12-31')
 
-        response = validate_role_listing(l1)
-        self.assertEqual(response.status_code, 500)  # Check the HTTP status code
-        data = response.get_json()  # Get the JSON data from the response
-        self.assertEqual(data["message"], "Deadline cannot be before today")  # Check the "message" in the JSON response
-        
+        try:
+            response = validate_role_listing(l1)
+            self.assertEqual(response.status_code, 500)  # Check the HTTP status code
+            data = response.get_json()  # Get the JSON data from the response
+            self.assertEqual(data["message"], "Deadline cannot be before today")  # Check the "message" in the JSON response
+        except Exception as e:
+            self.fail(f"Unexpected exception: {e}")
 
     
     def test_negative_empty_input(self):
