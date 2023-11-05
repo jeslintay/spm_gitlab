@@ -30,14 +30,18 @@ class TestListing(unittest.TestCase):
             }
         )
 
-    def test_negative_deadline(self):
-        
-            l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2020-12-31')
+    
 
-            try:
-                validate_role_listing(l1)
-            except Exception as e:
-                self.assertEqual(str(e), "Deadline cannot be before today.")
+    def test_negative_deadline(self):
+        l1 = Listing(role_name='Junior Engineer', role_descr='not senior engineer', skills_required='coding', role_deadline='2020-12-31')
+
+        try:
+            response = validate_role_listing(l1)
+            self.assertEqual(response.status_code, 500)  # Check the HTTP status code
+            data = response.get_json()  # Get the JSON data from the response
+            self.assertEqual(data["message"], "Deadline cannot be before today")  # Check the "message" in the JSON response
+        except Exception as e:
+            self.fail(f"Unexpected exception: {e}")
 
     
     def test_negative_empty_input(self):
