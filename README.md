@@ -20,7 +20,8 @@ These instructions will help you set up and run the application on your local ma
    ```shell
    git clone https://github.com/jeslintay/spm_project.git
 
+2. Import sql file(db.sql) into MYSQL
 
-2. Run roles.py, login.py and staff.py in terminal
+3. Run roles.py, login.py and staff.py in terminal
 
-3. Go to home.html and log in
+4. Go to home.html and log in
