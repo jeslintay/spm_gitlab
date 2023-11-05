@@ -8,6 +8,9 @@ from roles import app, db, Listing, Applicants, Staff, validate_role_listing
 from login import Accesscontrol
 from datetime import datetime
 
+app = Flask(__name__)
+CORS(app)
+
 
 class TestListing(unittest.TestCase):
     def test_to_dict(self):

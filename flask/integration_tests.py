@@ -8,6 +8,9 @@ from roles import app, db, Listing, Applicants, Staff, validate_role_listing
 from login import Accesscontrol
 from datetime import datetime
 
+app = Flask(__name__)
+CORS(app)
+
 class TestRoles(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
