@@ -29,12 +29,11 @@
             color: gold
         }
 
-        .btn:disabled {
+        .btn:disabled{
             background-color: gray;
             border-color: black;
             color: white;
         }
-
     </style>
 </head>
 
@@ -52,10 +51,6 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-                    <!-- home -->
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Home</a>
-                    </li>
 
                     <!-- List of Available Roles -->
                     <li class="nav-item">
@@ -63,21 +58,6 @@
                     </li>
                 </ul>
 
-                <!-- Profile -->
-                <div class="nav-item dropdown d-flex me-2">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown">
-                        Profile
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Skills Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Logout</a></li>
-                    </ul>
-                </div>
             </div>
         </div>
     </nav>
@@ -102,8 +82,6 @@
             
         </div>
 
-        
-        
 
         <table id="roleTable" class='table table-striped' border='1'>
             <thead id="headers" class='thead-dark'>
@@ -117,8 +95,11 @@
             </thead>
             <tbody id="body">
                 <tr v-for="record in filtered">
-                    <td id="testing"><a v-on:click="sendRole(record)"
-                            href="example_role_content (Staff).html">{{record.role_name}}</a></td>
+
+                    <td id="testing">
+                        <a :href="'example_role_content (Staff).html?staff_id=' + staffID" v-on:click="sendRole(record)">{{record.role_name}}</a>
+                      </td>
+                      
                     <td>{{record.role_descr}}</td>
                     <td>{{record.skills_required}}</td>
                     <td>{{record.role_deadline}}</td>
@@ -127,7 +108,6 @@
                 </tr>
             </tbody>
         </table>
-    </div>
     </div>
 
 
@@ -172,6 +152,7 @@
                         .catch(error => alert(error));
                     },
                     applyRole(record) {
+
                         this.appliedRoles.push(record.role_name)
 
                         axios.post('http://localhost:5000/apply_role', {
@@ -215,21 +196,15 @@
                         .then(response => {
                             this.applicants = response.data.data;   
                             console.log(this.applicants)
-                            // this.applicants.forEach(element => {
-                            //     if (element.role_name == record.role_name) {
-                            //         this.appliedRoles.push(record.role_name);
-
-                            //     }
-                            // });
-                            this.applicants.forEach(applicant => {
-                            this.filtered.forEach(record => {
-                                if (applicant.role_name == record.role_name) {
-                                    this.appliedRoles.push(record.role_name);
-                                }
-                            });
-                        });
-
-                        })
+                            this.applicants.forEach(applicant => { 
+                            this.filtered.forEach(record => { 
+                                if (applicant.role_name == record.role_name) { 
+                                    this.appliedRoles.push(record.role_name); 
+                                } 
+                            }); 
+                        }); 
+ 
+                        }) 
                         .catch(error => alert(error));
                 }
             });

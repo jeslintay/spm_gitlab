@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from datetime import datetime
 
 app = Flask(__name__)
 
@@ -125,6 +124,7 @@ def create_role_listing():
             "message": "Incorrect JSON object provided."
         }),500
     
+
     if validate_role_listing(data) == True:
         Listings = []
         for skill in data['skills_required']:
@@ -144,6 +144,7 @@ def create_role_listing():
                 "message": "Unable to commit to database."
             }), 500
         
+
         return jsonify(Listings), 201
     
     else:
@@ -230,24 +231,6 @@ def edit_role_listing(role_name, skills_required):
         return jsonify({
             "message": "Role listing not found."
         }), 404
-    
-    if (roleListing.role_name != data['role_name']):
-        roleListing2 = Listing.query.filter_by(role_name=data['role_name']).first()
-        if roleListing2 is not None:
-            return jsonify({
-                "message": "Role Listing already exists."
-            }), 500
-        
-    if data['role_deadline'] == None or data['role_descr'] == "" or data['skills_required'] == "" or data['role_name'] == "":
-        return jsonify({
-            "message": "Input cannot be empty."
-        }), 500
-    
-    today = datetime.today().strftime('%Y-%m-%d')
-    if data['role_deadline'] < today:
-        return jsonify({
-            "message": "Deadline cannot be before today."
-        }), 500
 
     if 'role_name' in data:
         roleListing.role_name = data['role_name']
@@ -257,8 +240,6 @@ def edit_role_listing(role_name, skills_required):
         roleListing.skills_required = data['skills_required']
     if 'role_deadline' in data:
         roleListing.role_deadline = data['role_deadline']
-
-    
 
     # Commit to DB
     try:
@@ -279,8 +260,6 @@ def get_staff_skills(staff_id):
         return jsonify({"skills": skill_names}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
-
 
 # holds values of selected roles    
 # @app.route("/role", methods=['POST'])
