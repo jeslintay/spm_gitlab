@@ -152,16 +152,16 @@ def create_role_listing():
         return validate_role_listing(data)
 
 def validate_role_listing(data):
-
-    roleListing = Listing.query.filter_by(role_name=data['role_name']).first()
+    
+    if data.role_deadline == None or data.role_descr == "" or data.skills_required == "" or data.role_name == "":
+        return jsonify({
+            "message": "Input cannot be empty."
+        }), 500
+    
+    roleListing = Listing.query.filter_by(role_name=data.role_name).first()
     if roleListing is not None:
         return jsonify({
             "message": "Role Listing already exists."
-        }), 500
-    
-    if data['role_deadline'] == None or data['role_descr'] == "" or data['skills_required'] == "" or data['role_name'] == "":
-        return jsonify({
-            "message": "Input cannot be empty."
         }), 500
     
     today = datetime.today().strftime('%Y-%m-%d')
