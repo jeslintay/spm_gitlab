@@ -107,6 +107,7 @@
                 data: {
                     roles: [],
                     filtered: [],
+                    duplicated_filtered: [],
                     input_title: "",
                     filterby: "Role Title"
                 },
@@ -123,30 +124,27 @@
                         console.log("went to edit details");
                     },
                     showHint(){
-                        console.log(this.input_title)
-                        axios.get('http://localhost:5000/view_role_listings')
-                        .then(response => {
-                            this.roles = response.data.data;
-                            this.roles.forEach(element => {
-                                element.role_deadline = new Date(element.role_deadline);
-                                // convert role_deadline to YYYY/MM/DD format
-                                element.role_deadline = element.role_deadline.toISOString().slice(0, 10);
-                            });
+                        let display = this.duplicated_filtered.slice();
+                        this.filtered.forEach(element => {
+                            element.role_deadline = new Date(element.role_deadline);
+                            // convert role_deadline to YYYY/MM/DD format
+                            element.role_deadline = element.role_deadline.toISOString().slice(0, 10);
+                        });
+                        if(this.filterby === "Role Title"){
+                            display = display.filter(obj => obj.role_name.toLowerCase().includes(this.input_title.toLowerCase()));
+                            console.log(this.filtered)
+                        }else{
+                            display = display.filter(obj => obj.skills_required.toLowerCase().includes(this.input_title.toLowerCase()));
+                            console.log(this.filtered)
+                        }
+                        this.filtered = display;
 
-                            if(this.filterby === "Role Title"){
-                                this.filtered = this.roles.filter(obj => obj.role_name.toLowerCase().includes(this.input_title.toLowerCase()));
-                            }else{
-                                this.filtered = this.roles.filter(obj => obj.skills_required.toLowerCase().includes(this.input_title.toLowerCase()));
-                            }
-                        })
-                        .catch(error => alert(error));
-                    }
+                    },
                 },
                 mounted: function () {
                     axios.get('http://localhost:5000/view_role_listings')
                         .then(response => {
                             this.roles = response.data.data;
-                            
                             this.roles.forEach(element => {
                                 element.role_deadline = new Date(element.role_deadline);
                                 // convert role_deadline to YYYY/MM/DD format
@@ -155,7 +153,6 @@
                                 if (this.filtered.length == 0) {
                                     this.filtered.push(element);
                                 } else if (this.filtered.some(obj => obj.role_name === element.role_name)) {
-                                    console.log(element);
 
                                     var i = this.filtered.findIndex(obj => obj.role_name === element.role_name);
                                     this.filtered[i].skills_required = this.filtered[i].skills_required + ", " + element.skills_required;
@@ -165,7 +162,8 @@
                                 const curreDate = new Date();
                                 this.filtered = this.filtered.filter(obj => new Date(obj.role_deadline) > curreDate);
                             });
-                            console.log(this.filtered)
+                            this.duplicated_filtered = this.filtered;
+
                         })
                         .catch(error => alert(error));
                 }
