@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from datetime import datetime 
 
 app = Flask(__name__)
 
@@ -10,6 +11,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://' + \
                                         '@localhost:3306/sbrp'
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
                                             'pool_recycle': 280}
+
+
 # else:
 #     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
 
@@ -116,31 +119,60 @@ def view_applicants(role_name):
 
 @app.route("/create_role_listing", methods=["POST"])
 def create_role_listing():
-    data=request.get_json()
+    data = request.get_json()
     print(data)
-    if not all(key in data.keys() for
-               key in ('role_name','role_descr','skills_required','role_deadline')):
-        return jsonify({
-            "message": "Incorrect JSON object provided."
-        }),500
-    
+
+    # Validate role listing
+    validation_response = validate_role_listing(data)
+    if validation_response is not True:
+        return validation_response  # This will return the error response from validation
+
+    # Proceed with role listing creation if validation passed
     Listings = []
     for skill in data['skills_required']:
         print(skill)
-        roleListing=Listing(
+        roleListing = Listing(
             role_name=data['role_name'], role_descr=data['role_descr'],
-            skills_required=skill, role_deadline= data['role_deadline'])
+            skills_required=skill, role_deadline=data['role_deadline']
+        )
         Listings.append(roleListing.to_dict())
+        db.session.add(roleListing)  # Add each roleListing to the session
+
     # Commit to DB
-        try:
-            db.session.add(roleListing)
-            db.session.commit()
-        except Exception:
-            return jsonify({
-                "message": "Unable to commit to database."
-            }), 500
-        
+    try:
+        db.session.commit()
+    except Exception as e:
+        return jsonify({
+            "message": "Unable to commit to database.",
+            "error": str(e)
+        }), 500
+    
     return jsonify(Listings), 201
+
+
+def validate_role_listing(data):
+    # Check if any field is None or empty
+    if data['role_deadline'] is None or data['role_descr'] == "" or not data['skills_required'] or data['role_name'] == "":
+        return jsonify({
+            "message": "Input cannot be empty."
+        }), 500
+    
+    # Check if the role listing already exists
+    roleListing = Listing.query.filter_by(role_name=data['role_name']).first()
+    if roleListing is not None:
+        return jsonify({
+            "message": "Role Listing already exists."
+        }), 500
+    
+    # Check if the deadline is before today
+    today = datetime.today().strftime('%Y-%m-%d')
+    if data['role_deadline'] < today:
+        return jsonify({
+            "message": "Deadline cannot be before today."
+        }), 500
+    
+    return True
+
 
 
 @app.route("/apply_role", methods=['POST'])
